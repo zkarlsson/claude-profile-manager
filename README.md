@@ -2,10 +2,15 @@
 
 A robust authentication profile management system for Claude Code CLI that allows seamless switching between different Claude authentication methods.
 
+## 🖥️ Platform Support
+
+- **macOS** ✅ **Production Ready**: Full-featured bash implementation (see usage below)
+- **Windows** 🚧 **In Development**: .NET implementation using Windows Credential Manager ([see `windows/`](windows/))
+
 ## Features
 
 - **Profile Management**: Save, list, switch, and delete authentication profiles
-- **Secure Storage**: Console API credentials stored in encrypted macOS keychain
+- **Secure Storage**: Console API credentials stored in encrypted platform keychain
 - **Authentication Detection**: Automatically detects subscription vs console API methods
 - **Settings Preservation**: Each profile maintains its own Claude settings
 - **Command Aliases**: Short aliases for all commands (`s`, `ls`, `sw`, `cur`, `del`, `rm`)
