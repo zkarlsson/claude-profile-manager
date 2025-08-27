@@ -5,6 +5,21 @@ All notable changes to Claude Profile Manager for Windows will be documented in 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-08-27
+
+### Added
+- **Enhanced Save Command**: Save command now works without arguments when a current profile exists
+- **Confirmation Prompts**: Added user-friendly prompts when overwriting existing profiles
+- **Automatic Profile Detection**: Uses current profile name when no argument provided
+
+### Changed
+- Save command argument is now optional for better user experience
+- Improved error messages when no profile name specified and no current profile active
+
+### Fixed
+- Project configuration issues between CLI executable and Windows library components
+- Package version conflicts in System.CommandLine dependencies
+
 ## [1.0.0] - 2025-08-26
 
 ### Added

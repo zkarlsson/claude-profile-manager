@@ -89,6 +89,9 @@ The commands are identical across both platforms:
 # Save your current authentication as a profile
 claude-profile-manager save work
 
+# Save without specifying name (uses current profile)
+claude-profile-manager save
+
 # List all profiles with status
 claude-profile-manager list
 
