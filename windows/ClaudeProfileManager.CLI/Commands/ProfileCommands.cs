@@ -26,7 +26,11 @@ public class ProfileCommands
 
     private void ConfigureSaveCommand(RootCommand rootCommand)
     {
-        var profileNameArg = new Argument<string>("profile-name", "Name of the profile to save");
+        // Make profile name optional - will use current profile if not specified
+        var profileNameArg = new Argument<string?>("profile-name", "Name of the profile to save (uses current if not specified)")
+        {
+            Arity = ArgumentArity.ZeroOrOne
+        };
         var aliasesOption = new Option<string[]>("--aliases", "Optional aliases for the profile") { AllowMultipleArgumentsPerToken = true };
         aliasesOption.AddAlias("-a");
 
@@ -35,10 +39,39 @@ public class ProfileCommands
         saveCommand.AddArgument(profileNameArg);
         saveCommand.AddOption(aliasesOption);
 
-        saveCommand.SetHandler(async (string profileName, string[] aliases) =>
+        saveCommand.SetHandler(async (string? profileName, string[] aliases) =>
         {
             try
             {
+                // If no profile name provided, try to use current profile
+                if (string.IsNullOrWhiteSpace(profileName))
+                {
+                    var currentProfile = await _profileManager.GetCurrentProfileAsync();
+                    if (string.IsNullOrEmpty(currentProfile))
+                    {
+                        Console.WriteLine("✗ No profile name specified and no current profile active.");
+                        Console.WriteLine("Usage: claude-profile-manager save <name> [--aliases ...]");
+                        Environment.Exit(1);
+                        return;
+                    }
+                    
+                    profileName = currentProfile;
+                    Console.WriteLine($"No profile name specified. Using current profile: {profileName}");
+                    
+                    // Check if profile exists and prompt for confirmation
+                    var profiles = await _profileManager.ListProfilesAsync();
+                    if (profiles.Any(p => p.Name.Equals(profileName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        Console.Write($"Profile '{profileName}' already exists. Overwrite existing credentials? [y/N]: ");
+                        var response = Console.ReadLine()?.Trim().ToLowerInvariant();
+                        if (response != "y" && response != "yes")
+                        {
+                            Console.WriteLine("Save cancelled.");
+                            return;
+                        }
+                    }
+                }
+
                 // Validate profile name at CLI level for immediate user feedback
                 var profileValidation = InputValidator.ValidateProfileName(profileName);
                 if (!profileValidation.IsValid)
