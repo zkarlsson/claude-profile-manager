@@ -1,0 +1,192 @@
+TOPIC
+    about_ClaudeProfileManager
+
+SHORT DESCRIPTION
+    Provides information about the Claude Profile Manager PowerShell module for 
+    managing Claude Code CLI authentication profiles on Windows.
+
+LONG DESCRIPTION
+    The ClaudeProfileManager module provides native PowerShell cmdlets for managing 
+    Claude Code CLI authentication profiles with enterprise-grade security features.
+    It allows you to save, switch, and manage multiple Claude authentication profiles 
+    seamlessly on Windows systems.
+
+    The module integrates with the Windows Credential Manager for secure credential 
+    storage and provides comprehensive profile management capabilities including:
+
+    - Profile creation and management
+    - Secure credential switching  
+    - Alias management for convenient access
+    - Health monitoring and diagnostics
+    - Enterprise security features
+
+KEY FEATURES
+    Profile Management
+        - Save current Claude credentials as named profiles
+        - List all available profiles with status information
+        - Switch between profiles seamlessly
+        - Delete unused profiles
+        - View current active profile
+
+    Alias Management  
+        - Create short aliases for profile names
+        - List all defined aliases
+        - Remove aliases when no longer needed
+        - Use aliases anywhere profile names are accepted
+
+    Security Features
+        - Windows Credential Manager integration
+        - Secure credential storage and retrieval
+        - Access control and permission management
+        - Audit logging capabilities
+
+    Health Monitoring
+        - Comprehensive system health checks
+        - Token expiration monitoring
+        - CLI availability verification
+        - Profile integrity validation
+
+CORE CMDLETS
+    Profile Management Cmdlets:
+        Save-ClaudeProfile       - Save current credentials as a profile
+        Get-ClaudeProfile        - List and retrieve profile information
+        Switch-ClaudeProfile     - Switch to a different profile
+        Remove-ClaudeProfile     - Delete a profile
+        Get-CurrentClaudeProfile - Get the currently active profile
+
+    Alias Management Cmdlets:
+        Set-ClaudeProfileAlias    - Create or update profile aliases
+        Get-ClaudeProfileAlias    - List profile aliases
+        Remove-ClaudeProfileAlias - Remove profile aliases
+
+    Health and Diagnostics:
+        Test-ClaudeProfileHealth  - Perform system health checks
+        Get-ClaudeProfileStatus   - Get comprehensive status information
+
+ALIASES
+    The module provides convenient aliases for frequently used cmdlets:
+        Save-CP      -> Save-ClaudeProfile
+        Get-CP       -> Get-ClaudeProfile
+        Switch-CP    -> Switch-ClaudeProfile
+        Remove-CP    -> Remove-ClaudeProfile
+        Current-CP   -> Get-CurrentClaudeProfile
+        Set-CPA      -> Set-ClaudeProfileAlias
+        Get-CPA      -> Get-ClaudeProfileAlias
+        Remove-CPA   -> Remove-ClaudeProfileAlias
+
+GETTING STARTED
+    1. Import the module:
+        Import-Module ClaudeProfileManager
+
+    2. Save your current credentials as a profile:
+        Save-ClaudeProfile -Name "work"
+
+    3. List all profiles:
+        Get-ClaudeProfile
+
+    4. Switch between profiles:
+        Switch-ClaudeProfile -Name "work"
+
+    5. Create convenient aliases:
+        Set-ClaudeProfileAlias -Alias "w" -ProfileName "work"
+
+    6. Use aliases:
+        Switch-ClaudeProfile -Name "w"
+
+COMMON USAGE PATTERNS
+    Basic Profile Workflow:
+        # Save work profile
+        Save-ClaudeProfile -Name "work" -Aliases "w", "office"
+        
+        # Save personal profile  
+        Save-ClaudeProfile -Name "personal" -Aliases "p", "home"
+        
+        # Switch between profiles
+        Switch-ClaudeProfile -Name "w"
+        Switch-ClaudeProfile -Name "p"
+
+    Health Monitoring:
+        # Quick health check
+        Test-ClaudeProfileHealth -Quick
+        
+        # Detailed health check with full diagnostics
+        Test-ClaudeProfileHealth -Detailed
+        
+        # Get comprehensive status
+        Get-ClaudeProfileStatus -IncludeSystemInfo -IncludeAliases
+
+    Profile Management:
+        # List all profiles with detailed information
+        Get-ClaudeProfile -Detailed
+        
+        # Get current profile
+        $current = Get-CurrentClaudeProfile -Detailed
+        
+        # Remove old profiles
+        Remove-ClaudeProfile -Name "old-profile" -Force
+
+SECURITY CONSIDERATIONS
+    - All credentials are stored securely in Windows Credential Manager
+    - Profile files contain only metadata, never actual credentials
+    - Access is restricted to the current user account
+    - Audit logging can be enabled for compliance requirements
+    - All operations follow Windows security best practices
+
+TROUBLESHOOTING
+    Common Issues:
+    
+    "Profile not found" error:
+        - Verify profile name spelling with Get-ClaudeProfile
+        - Check if profile was created successfully
+        
+    "CLI not available" error:
+        - Ensure Claude Code CLI is installed and in PATH
+        - Verify Claude Code CLI is functional: claude --version
+        
+    "Authentication failed" error:
+        - Current credentials may be expired
+        - Try saving fresh credentials to the profile
+        
+    Health check failures:
+        - Run Test-ClaudeProfileHealth -Detailed for diagnostics
+        - Check system requirements and dependencies
+
+    Debug Mode:
+        Enable verbose logging for troubleshooting:
+        $VerbosePreference = 'Continue'
+        Get-ClaudeProfile -Verbose
+
+REQUIREMENTS
+    - Windows 10 or Windows 11
+    - PowerShell 5.1 or PowerShell Core 6+
+    - Claude Code CLI installed and configured
+    - .NET 9 Runtime
+    - Current user account (not Administrator required)
+
+EXAMPLES
+    Example 1: Save and switch profiles
+        PS C:\> Save-ClaudeProfile -Name "work"
+        PS C:\> Save-ClaudeProfile -Name "personal" 
+        PS C:\> Switch-ClaudeProfile -Name "work"
+        PS C:\> Get-CurrentClaudeProfile
+
+    Example 2: Use aliases
+        PS C:\> Set-ClaudeProfileAlias -Alias "w" -ProfileName "work"
+        PS C:\> Switch-ClaudeProfile -Name "w"
+
+    Example 3: Health monitoring
+        PS C:\> Test-ClaudeProfileHealth -Quick
+        PS C:\> Get-ClaudeProfileStatus -IncludeSystemInfo
+
+    Example 4: Pipeline usage
+        PS C:\> Get-ClaudeProfile | Where-Object { $_.TokenHealth -match "expired" }
+        PS C:\> Get-ClaudeProfileAlias | Remove-ClaudeProfileAlias -Force
+
+SEE ALSO
+    Get-Help Save-ClaudeProfile -Full
+    Get-Help Get-ClaudeProfile -Full  
+    Get-Help Switch-ClaudeProfile -Full
+    Get-Help Test-ClaudeProfileHealth -Full
+    
+    Online documentation:
+    https://github.com/anthropics/claude-profile-manager/wiki/PowerShell

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <ViewDefinitions>
+        
+        <!-- ClaudeProfileManager.Profile Default View -->
+        <View>
+            <Name>ClaudeProfileManager.Profile</Name>
+            <ViewSelectedBy>
+                <TypeName>ClaudeProfileManager.Profile</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Label>Name</Label>
+                        <Width>20</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Current</Label>
+                        <Width>7</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Auth Method</Label>
+                        <Width>15</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Token Health</Label>
+                        <Width>25</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Last Used</Label>
+                        <Width>20</Width>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    if ($_.IsCurrent) { "✓" } else { "" }
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>AuthMethod</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>TokenHealth</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    if ($_.LastUsed) { $_.LastUsed.ToString("yyyy-MM-dd HH:mm") } else { "Never" }
+                                </ScriptBlock>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+        
+        <!-- ClaudeProfileManager.Profile Detailed View -->
+        <View>
+            <Name>ClaudeProfileManager.Profile.Detailed</Name>
+            <ViewSelectedBy>
+                <TypeName>ClaudeProfileManager.Profile</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>Name</Label>
+                                <PropertyName>Name</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Current</Label>
+                                <ScriptBlock>
+                                    if ($_.IsCurrent) { "Yes" } else { "No" }
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Authentication Method</Label>
+                                <PropertyName>AuthMethod</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Token Health</Label>
+                                <PropertyName>TokenHealth</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Created</Label>
+                                <ScriptBlock>
+                                    if ($_.Created) { $_.Created.ToString("yyyy-MM-dd HH:mm:ss") } else { "Unknown" }
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Last Used</Label>
+                                <ScriptBlock>
+                                    if ($_.LastUsed) { $_.LastUsed.ToString("yyyy-MM-dd HH:mm:ss") } else { "Never" }
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Aliases</Label>
+                                <ScriptBlock>
+                                    if ($_.Aliases -and $_.Aliases.Count -gt 0) { 
+                                        ($_.Aliases -join ", ") 
+                                    } else { 
+                                        "None" 
+                                    }
+                                </ScriptBlock>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+
+        <!-- ClaudeProfileManager.Alias Default View -->
+        <View>
+            <Name>ClaudeProfileManager.Alias</Name>
+            <ViewSelectedBy>
+                <TypeName>ClaudeProfileManager.Alias</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Label>Alias</Label>
+                        <Width>20</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Profile Name</Label>
+                        <Width>30</Width>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Alias</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>ProfileName</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+
+        <!-- ClaudeProfileManager.HealthCheck Default View -->
+        <View>
+            <Name>ClaudeProfileManager.HealthCheck</Name>
+            <ViewSelectedBy>
+                <TypeName>ClaudeProfileManager.HealthCheck</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Label>Component</Label>
+                        <Width>30</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Status</Label>
+                        <Width>10</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Description</Label>
+                        <Width>50</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Duration</Label>
+                        <Width>10</Width>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    switch ($_.Status) {
+                                        'Healthy' { '✓' }
+                                        'Degraded' { '⚠' }
+                                        'Unhealthy' { '✗' }
+                                        default { $_.Status }
+                                    }
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Description</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    if ($_.Duration) { 
+                                        "{0:F0}ms" -f $_.Duration.TotalMilliseconds 
+                                    } else { 
+                                        "-" 
+                                    }
+                                </ScriptBlock>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+
+        <!-- ClaudeProfileManager.Status Default View -->
+        <View>
+            <Name>ClaudeProfileManager.Status</Name>
+            <ViewSelectedBy>
+                <TypeName>ClaudeProfileManager.Status</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>Overall Status</Label>
+                                <ScriptBlock>
+                                    switch ($_.OverallStatus) {
+                                        'Healthy' { '✓ Healthy' }
+                                        'Degraded' { '⚠ Degraded' }
+                                        'Unhealthy' { '✗ Unhealthy' }
+                                        default { $_.OverallStatus }
+                                    }
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Current Profile</Label>
+                                <ScriptBlock>
+                                    if ($_.CurrentProfile) { $_.CurrentProfile.Name } else { "None" }
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Total Profiles</Label>
+                                <PropertyName>ProfileCount</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Healthy Components</Label>
+                                <PropertyName>Summary.HealthyComponents</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Degraded Components</Label>
+                                <PropertyName>Summary.DegradedComponents</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Unhealthy Components</Label>
+                                <PropertyName>Summary.UnhealthyComponents</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Last Checked</Label>
+                                <ScriptBlock>
+                                    $_.Summary.LastChecked.ToString("yyyy-MM-dd HH:mm:ss")
+                                </ScriptBlock>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+
+    </ViewDefinitions>
+</Configuration>
