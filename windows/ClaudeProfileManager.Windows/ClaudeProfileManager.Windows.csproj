@@ -5,13 +5,38 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.8" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta7.25380.108" />
   </ItemGroup>
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>claude-profile-manager</AssemblyName>
+    <Version>1.0.0</Version>
+    <AssemblyTitle>Claude Profile Manager for Windows</AssemblyTitle>
+    <Product>Claude Profile Manager</Product>
+    <Description>Windows CLI application for managing Claude Code authentication profiles</Description>
+    <Copyright>Copyright © 2025 Claude Profile Manager Team</Copyright>
+    
+    <!-- Distribution optimization -->
+    <PublishDir>dist\</PublishDir>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    
+    <!-- Disable trimming due to JSON serialization issues -->
+    <PublishTrimmed>false</PublishTrimmed>
+    
+    <!-- MSI-friendly properties -->
+    <ProductName>Claude Profile Manager</ProductName>
+    <Manufacturer>Claude Profile Manager Team</Manufacturer>
+    <UpgradeCode>{12345678-1234-5678-9ABC-123456789012}</UpgradeCode>
   </PropertyGroup>
 
 </Project>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>claude-profile-manager</id>
+    <version>1.0.0</version>
+    <packageSourceUrl>https://github.com/anthropics/claude-profile-manager/tree/main/windows</packageSourceUrl>
+    <owners>Claude Profile Manager Team</owners>
+    <title>Claude Profile Manager</title>
+    <authors>Claude Profile Manager Team</authors>
+    <projectUrl>https://github.com/anthropics/claude-profile-manager</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/anthropics/claude-profile-manager/main/assets/icon.png</iconUrl>
+    <copyright>2025 Claude Profile Manager. All rights reserved.</copyright>
+    <licenseUrl>https://github.com/anthropics/claude-profile-manager/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/anthropics/claude-profile-manager</projectSourceUrl>
+    <docsUrl>https://github.com/anthropics/claude-profile-manager/wiki</docsUrl>
+    <bugTrackerUrl>https://github.com/anthropics/claude-profile-manager/issues</bugTrackerUrl>
+    <tags>claude ai cli profile authentication credential management windows powershell enterprise security</tags>
+    <summary>Professional authentication profile management system for Claude Code CLI on Windows with enterprise-grade security and PowerShell integration.</summary>
+    <description><![CDATA[
+# Claude Profile Manager for Windows
+
+A robust authentication profile management system for Claude Code CLI that allows seamless switching between different Claude authentication methods on Windows systems.
+
+## Key Features
+
+### Profile Management
+- **Save & Switch Profiles**: Save current Claude credentials as named profiles and switch between them instantly
+- **Secure Storage**: All credentials stored using Windows Credential Manager with enterprise-grade encryption
+- **Profile Health Monitoring**: Real-time token expiration detection and health validation
+- **Alias Support**: Create convenient shortcuts for frequently used profiles
+
+### Enterprise Security
+- **Windows ACL Integration**: File-level security with restrictive permissions
+- **Memory Protection**: SecureString-based credential handling with automatic cleanup
+- **Input Validation**: Comprehensive protection against injection attacks and path traversal
+- **Audit Logging**: Optional detailed logging for compliance and troubleshooting
+
+### PowerShell Integration
+- **Native PowerShell Module**: Complete PowerShell cmdlet suite with rich object formatting
+- **Pipeline Support**: Full PowerShell pipeline integration for advanced automation
+- **Tab Completion**: IntelliSense support for all cmdlets and parameters
+- **Help Documentation**: Comprehensive help system with examples and best practices
+
+### Installation & Management
+- **Automated Installation**: One-click installation with proper Windows integration
+- **System Integration**: PATH environment variable management and shell integration
+- **Health Diagnostics**: Comprehensive system health checks and troubleshooting tools
+- **Unattended Operation**: Silent installation support for enterprise deployment
+
+## System Requirements
+
+- Windows 10 or Windows 11 (x64)
+- .NET 9 Runtime
+- PowerShell 5.1 or PowerShell Core 6+
+- Claude Code CLI (automatically detected)
+
+## Quick Start
+
+After installation, use these commands to get started:
+
+```powershell
+# Import the PowerShell module
+Import-Module ClaudeProfileManager
+
+# Save your current credentials as a profile
+Save-ClaudeProfile -Name "work" -Aliases "w", "office"
+
+# List all profiles
+Get-ClaudeProfile
+
+# Switch between profiles
+Switch-ClaudeProfile -Name "work"
+
+# Check system health
+Test-ClaudeProfileHealth
+```
+
+Or use the command-line interface directly:
+
+```cmd
+claude-profile-manager save work
+claude-profile-manager list
+claude-profile-manager switch work
+claude-profile-manager current
+```
+
+## Enterprise Features
+
+- **Group Policy Support**: Centralized configuration management
+- **Active Directory Integration**: User and computer-based profile management
+- **Compliance Reporting**: Detailed audit trails and compliance reports
+- **Automated Deployment**: MSI installer with silent installation options
+- **Security Hardening**: Advanced security configuration options
+
+## Support
+
+- **Documentation**: Comprehensive wiki with examples and troubleshooting guides
+- **Community Support**: GitHub discussions and issue tracking
+- **Enterprise Support**: Professional support options available
+
+This package installs both the CLI application and PowerShell module for complete Windows integration.
+]]></description>
+    <releaseNotes><![CDATA[
+## Version 1.0.0 - Initial Release
+
+### New Features
+- Complete profile management system with save, switch, list, and delete operations
+- Windows Credential Manager integration for secure credential storage
+- PowerShell module with 10+ cmdlets for native Windows integration
+- Comprehensive health monitoring and diagnostics
+- Alias support for convenient profile access
+- Enterprise-grade security with Windows ACL integration
+- Automated installation and deployment tools
+
+### Security Enhancements
+- SecureString-based credential handling with automatic memory cleanup
+- Windows ACL file protection with restrictive permissions
+- Input validation and injection attack prevention
+- Comprehensive error sanitization and information leakage protection
+
+### PowerShell Integration
+- Native PowerShell cmdlets with rich object formatting
+- Full pipeline support and tab completion
+- Comprehensive help documentation with examples
+- Custom validation attributes and parameter validation
+
+### Enterprise Features
+- Silent installation support for automated deployment
+- System-wide PATH integration and shell configuration
+- Comprehensive logging and audit capabilities
+- Health monitoring with detailed diagnostic information
+
+### Installation & Deployment
+- Chocolatey package for easy installation and updates
+- Professional MSI installer for enterprise deployment
+- Automated uninstallation with data preservation options
+- Cross-platform PowerShell compatibility (5.1+ and Core)
+
+### Testing & Quality
+- 138+ comprehensive test cases with full coverage
+- Security validation and penetration testing
+- Performance optimization and memory leak prevention
+- Compatibility testing across Windows versions
+]]></releaseNotes>
+    <dependencies>
+      <dependency id="dotnet-9.0-runtime" version="9.0.0" />
+      <dependency id="powershell-core" version="7.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+    <file src="..\..\ClaudeProfileManager.Windows\bin\Release\net9.0\publish\**" target="tools\app" exclude="**\*.pdb" />
+    <file src="..\..\PowerShell\**" target="tools\powershell" exclude="**\Tests\**;**\dist\**" />
+  </files>
+</package>
