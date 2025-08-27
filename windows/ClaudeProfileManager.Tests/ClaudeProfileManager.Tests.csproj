@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ClaudeProfileManager.Core\ClaudeProfileManager.Core.csproj" />
     <ProjectReference Include="..\ClaudeProfileManager.Windows\ClaudeProfileManager.Windows.csproj" />
+    <ProjectReference Include="..\ClaudeProfileManager.CLI\ClaudeProfileManager.CLI.csproj" />
   </ItemGroup>
 
 </Project>

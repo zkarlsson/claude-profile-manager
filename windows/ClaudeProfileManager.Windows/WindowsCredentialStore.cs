@@ -1,7 +1,13 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
+using ClaudeProfileManager.Core;
 using ClaudeProfileManager.Core.Interfaces;
+using ClaudeProfileManager.Core.Resilience;
+using ClaudeProfileManager.Core.Security;
+using ClaudeProfileManager.Core.Services;
+using ClaudeProfileManager.Windows.Logging;
 using Microsoft.Extensions.Logging;
 
 namespace ClaudeProfileManager.Windows;
@@ -9,7 +15,7 @@ namespace ClaudeProfileManager.Windows;
 /// <summary>
 /// Windows implementation of ICredentialStore using Windows Credential Manager.
 /// </summary>
-public class WindowsCredentialStore : ICredentialStore
+public class WindowsCredentialStore : ISecureCredentialStore
 {
     private readonly ILogger<WindowsCredentialStore> _logger;
 
@@ -19,23 +25,23 @@ public class WindowsCredentialStore : ICredentialStore
     }
 
     /// <inheritdoc />
-    public Task<bool> SaveCredentialAsync(string profileName, string credential, string serviceType = "Claude Profile Manager")
+    public Task<bool> SaveCredentialAsync(string profileName, string credential, string serviceType = Constants.ProfileManagerServiceName)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(profileName))
             {
-                _logger.LogError("Profile name cannot be null or empty");
+                _logger.ProfileNameNullOrEmpty();
                 return Task.FromResult(false);
             }
             
             if (string.IsNullOrEmpty(credential))
             {
-                _logger.LogError("Credential cannot be null or empty");
+                _logger.CredentialNullOrEmpty();
                 return Task.FromResult(false);
             }
             
-            _logger.LogDebug("Saving credential for profile '{ProfileName}' with service '{ServiceType}'", profileName, serviceType);
+            _logger.SavingCredential(profileName, serviceType);
 
             var credentialBlob = Encoding.UTF8.GetBytes(credential);
             var target = GetTargetName(profileName, serviceType);
@@ -59,11 +65,11 @@ public class WindowsCredentialStore : ICredentialStore
                 if (!result)
                 {
                     var error = Marshal.GetLastWin32Error();
-                    _logger.LogError("Failed to save credential. Win32 error: {Error}", error);
+                    StandardizedErrorHandler.HandleWin32Error(_logger, "CredWrite", error, $"ProfileName: {profileName}");
                     return Task.FromResult(false);
                 }
 
-                _logger.LogDebug("Successfully saved credential for profile '{ProfileName}'", profileName);
+                _logger.CredentialSaved(profileName);
                 return Task.FromResult(true);
             }
             finally
@@ -76,17 +82,17 @@ public class WindowsCredentialStore : ICredentialStore
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception occurred while saving credential for profile '{ProfileName}'", profileName);
+            StandardizedErrorHandler.HandleException(_logger, ex, "SaveCredential", $"ProfileName: {profileName}");
             return Task.FromResult(false);
         }
     }
 
     /// <inheritdoc />
-    public Task<string?> GetCredentialAsync(string profileName, string serviceType = "Claude Profile Manager")
+    public Task<string?> GetCredentialAsync(string profileName, string serviceType = Constants.ProfileManagerServiceName)
     {
         try
         {
-            _logger.LogDebug("Retrieving credential for profile '{ProfileName}' with service '{ServiceType}'", profileName, serviceType);
+            _logger.RetrievingCredential(profileName, serviceType);
 
             var target = GetTargetName(profileName, serviceType);
             
@@ -101,7 +107,7 @@ public class WindowsCredentialStore : ICredentialStore
                         Marshal.Copy(credential.CredentialBlob, credentialBytes, 0, credential.CredentialBlobSize);
                         var result = Encoding.UTF8.GetString(credentialBytes);
                         
-                        _logger.LogDebug("Successfully retrieved credential for profile '{ProfileName}'", profileName);
+                        _logger.CredentialRetrieved(profileName);
                         return Task.FromResult<string?>(result);
                     }
                 }
@@ -114,28 +120,28 @@ public class WindowsCredentialStore : ICredentialStore
             var error = Marshal.GetLastWin32Error();
             if (error != ERROR_NOT_FOUND)
             {
-                _logger.LogError("Failed to retrieve credential. Win32 error: {Error}", error);
+                StandardizedErrorHandler.HandleWin32Error(_logger, "CredRead", error, $"ProfileName: {profileName}");
             }
             else
             {
-                _logger.LogDebug("Credential not found for profile '{ProfileName}'", profileName);
+                _logger.CredentialNotFound(profileName);
             }
 
             return Task.FromResult<string?>(null);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception occurred while retrieving credential for profile '{ProfileName}'", profileName);
+            StandardizedErrorHandler.HandleException<WindowsCredentialStore, string>(_logger, ex, "GetCredential", $"ProfileName: {profileName}");
             return Task.FromResult<string?>(null);
         }
     }
 
     /// <inheritdoc />
-    public Task<bool> DeleteCredentialAsync(string profileName, string serviceType = "Claude Profile Manager")
+    public Task<bool> DeleteCredentialAsync(string profileName, string serviceType = Constants.ProfileManagerServiceName)
     {
         try
         {
-            _logger.LogDebug("Deleting credential for profile '{ProfileName}' with service '{ServiceType}'", profileName, serviceType);
+            _logger.DeletingCredential(profileName, serviceType);
 
             var target = GetTargetName(profileName, serviceType);
             
@@ -145,77 +151,108 @@ public class WindowsCredentialStore : ICredentialStore
                 var error = Marshal.GetLastWin32Error();
                 if (error == ERROR_NOT_FOUND)
                 {
-                    _logger.LogDebug("Credential not found for profile '{ProfileName}' (already deleted)", profileName);
+                    _logger.CredentialAlreadyDeleted(profileName);
                     return Task.FromResult(true); // Treat "not found" as success for deletion
                 }
                 
-                _logger.LogError("Failed to delete credential. Win32 error: {Error}", error);
+                StandardizedErrorHandler.HandleWin32Error(_logger, "CredDelete", error, $"ProfileName: {profileName}");
                 return Task.FromResult(false);
             }
 
-            _logger.LogDebug("Successfully deleted credential for profile '{ProfileName}'", profileName);
+            _logger.CredentialDeleted(profileName);
             return Task.FromResult(true);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception occurred while deleting credential for profile '{ProfileName}'", profileName);
+            StandardizedErrorHandler.HandleException(_logger, ex, "DeleteCredential", $"ProfileName: {profileName}");
             return Task.FromResult(false);
         }
     }
 
     /// <inheritdoc />
-    public Task<IEnumerable<string>> ListProfilesAsync(string serviceType = "Claude Profile Manager")
+    public async Task<IEnumerable<string>> ListProfilesAsync(string serviceType = Constants.ProfileManagerServiceName)
     {
         try
         {
-            _logger.LogDebug("Listing profiles for service '{ServiceType}'", serviceType);
+            _logger.ListingProfiles(serviceType);
 
-            var filter = $"{serviceType}:*";
+            var filter = string.Concat(serviceType, ":*");
             var profiles = new List<string>();
 
-            if (CredEnumerate(filter, 0, out var count, out var credentialsPtr))
+            // Retry logic to handle Windows Credential Manager timing issues
+            var maxRetries = 3;
+            var retryDelayMs = 100;
+            
+            for (int retry = 0; retry <= maxRetries; retry++)
             {
-                try
+                if (CredEnumerate(filter, 0, out var count, out var credentialsPtr))
                 {
-                    for (int i = 0; i < count; i++)
+                    try
                     {
-                        var credentialPtr = Marshal.ReadIntPtr(credentialsPtr, i * IntPtr.Size);
-                        var credential = Marshal.PtrToStructure<CREDENTIAL>(credentialPtr);
+                        profiles.Clear(); // Clear any previous results
                         
-                        if (!string.IsNullOrEmpty(credential.TargetName))
+                        for (int i = 0; i < count; i++)
                         {
-                            var profileName = ExtractProfileNameFromTarget(credential.TargetName, serviceType);
-                            if (!string.IsNullOrEmpty(profileName))
+                            var credentialPtr = Marshal.ReadIntPtr(credentialsPtr, i * IntPtr.Size);
+                            var credential = Marshal.PtrToStructure<CREDENTIAL>(credentialPtr);
+                            
+                            if (!string.IsNullOrEmpty(credential.TargetName))
                             {
-                                profiles.Add(profileName);
+                                var profileName = ExtractProfileNameFromTarget(credential.TargetName, serviceType);
+                                if (!string.IsNullOrEmpty(profileName))
+                                {
+                                    profiles.Add(profileName);
+                                }
                             }
                         }
                     }
+                    finally
+                    {
+                        CredFree(credentialsPtr);
+                    }
+                    
+                    break; // Success, exit retry loop
                 }
-                finally
+                else
                 {
-                    CredFree(credentialsPtr);
+                    var error = Marshal.GetLastWin32Error();
+                    if (error == ERROR_NOT_FOUND)
+                    {
+                        // No credentials found is not an error for enumeration
+                        _logger.NoCredentialsFound(serviceType);
+                        break;
+                    }
+                    
+                    if (retry < maxRetries)
+                    {
+                        _logger.EnumerationRetrying(retry + 1, error);
+                        await Task.Delay(retryDelayMs * (retry + 1)); // Exponential backoff
+                    }
+                    else
+                    {
+                        StandardizedErrorHandler.HandleWin32Error(_logger, "CredEnumerate", error, $"ServiceType: {serviceType}");
+                    }
                 }
             }
 
-            _logger.LogDebug("Found {Count} profiles for service '{ServiceType}'", profiles.Count, serviceType);
-            return Task.FromResult<IEnumerable<string>>(profiles);
+            _logger.ProfilesFound(profiles.Count, serviceType);
+            return profiles.AsEnumerable();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception occurred while listing profiles for service '{ServiceType}'", serviceType);
-            return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
+            StandardizedErrorHandler.HandleException<WindowsCredentialStore, IEnumerable<string>>(_logger, ex, "ListProfiles", $"ServiceType: {serviceType}");
+            return Enumerable.Empty<string>();
         }
     }
 
     private static string GetTargetName(string profileName, string serviceType)
     {
-        return $"{serviceType}:{profileName}";
+        return string.Concat(serviceType, ":", profileName);
     }
 
     private static string? ExtractProfileNameFromTarget(string targetName, string serviceType)
     {
-        var prefix = $"{serviceType}:";
+        var prefix = string.Concat(serviceType, ":");
         if (targetName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
         {
             return targetName.Substring(prefix.Length);
@@ -280,6 +317,26 @@ public class WindowsCredentialStore : ICredentialStore
         SESSION = 1,
         LOCAL_MACHINE = 2,
         ENTERPRISE = 3
+    }
+
+    #endregion
+
+    #region Secure Credential Methods
+
+    public async Task<bool> SaveSecureCredentialAsync(string profileName, SecureString secureCredential, string serviceType = Constants.ProfileManagerServiceName)
+    {
+        using var credentialScope = SecureCredentialHandler.GetCredential(secureCredential);
+        return await SaveCredentialAsync(profileName, credentialScope.Value, serviceType);
+    }
+
+    public async Task<SecureCredentialScope?> GetSecureCredentialAsync(string profileName, string serviceType = Constants.ProfileManagerServiceName)
+    {
+        var credential = await GetCredentialAsync(profileName, serviceType);
+        if (string.IsNullOrEmpty(credential))
+            return null;
+
+        var secureString = SecureCredentialHandler.ToSecureString(credential);
+        return SecureCredentialHandler.GetCredential(secureString);
     }
 
     #endregion

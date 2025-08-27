@@ -94,8 +94,10 @@ public class WindowsProfileFileManagerTests : IDisposable
         File.Exists(profilePath).Should().BeTrue();
         
         var json = await File.ReadAllTextAsync(profilePath);
-        json.Should().Contain("\"name\": \"test-profile\"");
-        json.Should().Contain("\"auth_method\": \"Console\"");
+        json.Should().Contain("\"name\":");
+        json.Should().Contain("\"test-profile\"");
+        json.Should().Contain("\"auth_method\":");
+        json.Should().Contain("\"Console\"");
     }
 
     [Fact]

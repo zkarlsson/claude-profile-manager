@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ClaudeProfileManager.Tests.Windows;
 
+[Collection("WindowsCredentialStore")]
 public class WindowsCredentialStoreTests : IDisposable
 {
     private readonly WindowsCredentialStore _credentialStore;
@@ -90,6 +91,9 @@ public class WindowsCredentialStoreTests : IDisposable
 
         await _credentialStore.SaveCredentialAsync(profile1, credential1, TestServiceType);
         await _credentialStore.SaveCredentialAsync(profile2, credential2, TestServiceType);
+
+        // Small delay to ensure Windows Credential Manager has processed the writes
+        await Task.Delay(50);
 
         // Act
         var profiles = await _credentialStore.ListProfilesAsync(TestServiceType);

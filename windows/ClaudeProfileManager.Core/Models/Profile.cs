@@ -23,7 +23,7 @@ public class Profile
     /// The authentication method used by this profile.
     /// </summary>
     [JsonPropertyName("auth_method")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter<AuthMethod>))]
     public AuthMethod AuthMethod { get; set; }
 
     /// <summary>

@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\Users\\zkarl\\ClaudeProfileManager/**)",
+      "Bash(dotnet test:*)",
+      "Read(/C:\\Users\\zkarl\\.claude/**)",
+      "Read(/C:\\Users\\zkarl\\ClaudeProfileManager/**)",
+      "Bash(dotnet build)",
+      "Read(/C:\\Users\\zkarl\\.claude/**)",
+      "Read(/C:\\C:\\Users\\zkarl/**)",
+      "Read(/C:\\Users\\zkarl\\ClaudeProfileManager/**)",
+      "Bash(mkdir:*)",
+      "Bash(dotnet list:*)",
+      "Bash(dotnet run:*)",
+      "Read(/C:\\Users\\zkarl\\ClaudeProfileManager/**)",
+      "Read(/C:\\Users\\zkarl\\ClaudeProfileManager/**)",
+      "Read(/C:\\Users\\zkarl\\ClaudeProfileManager/**)",
+      "Bash(dotnet build:*)",
+      "Read(/C:\\c\\Users/**)",
+      "Read(/C:\\Users\\zkarl\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup/**)",
+      "Bash(npx which:*)",
+      "Read(/C:\\Users\\zkarl\\AppData\\Local\\npm-cache\\_npx\\5032fdcfd7bcf20e\\node_modules\\ccusage\\dist/**)",
+      "Read(/C:\\Users\\zkarl\\AppData\\Local\\npm-cache\\_npx\\5032fdcfd7bcf20e\\node_modules\\ccusage\\dist/**)",
+      "Read(/C:\\Users\\zkarl\\AppData\\Local\\npm-cache\\_npx\\5032fdcfd7bcf20e\\node_modules\\ccusage\\dist/**)",
+      "Bash(node:*)",
+      "Bash(rider:*)",
+      "Bash(cmd /c:*)",
+      "Bash(explorer:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

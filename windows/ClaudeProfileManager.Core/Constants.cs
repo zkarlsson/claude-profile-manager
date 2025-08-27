@@ -31,6 +31,11 @@ public static class Constants
     public const string AuditLogFileName = ".audit.log";
 
     /// <summary>
+    /// The filename for application configuration.
+    /// </summary>
+    public const string ConfigFileName = "config.json";
+
+    /// <summary>
     /// The file extension for profile metadata files.
     /// </summary>
     public const string ProfileFileExtension = ".json";
@@ -105,6 +110,15 @@ public static class Constants
     public static string GetAuditLogFilePath()
     {
         return Path.Combine(GetProfilesDirectory(), AuditLogFileName);
+    }
+
+    /// <summary>
+    /// Gets the full path to the configuration file.
+    /// </summary>
+    /// <returns>The full path to the configuration file</returns>
+    public static string GetConfigFilePath()
+    {
+        return Path.Combine(GetProfilesDirectory(), ConfigFileName);
     }
 
     /// <summary>
