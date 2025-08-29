@@ -30,26 +30,27 @@ function Get-ClaudeProfileCLIPath {
     # Search locations in priority order
     $searchPaths = @(
         # Local development build
-        (Join-Path $script:ModuleRoot "..\ClaudeProfileManager.CLI\bin\Debug\net9.0\ClaudeProfileManager.CLI.exe"),
-        (Join-Path $script:ModuleRoot "..\ClaudeProfileManager.CLI\bin\Release\net9.0\ClaudeProfileManager.CLI.exe"),
+        (Join-Path $script:ModuleRoot "..\..\ClaudeProfileManager.CLI\bin\Debug\net9.0\win-x64\claude-profile-manager.exe"),
+        (Join-Path $script:ModuleRoot "..\..\ClaudeProfileManager.CLI\bin\Release\net9.0\win-x64\claude-profile-manager.exe"),
+        (Join-Path $script:ModuleRoot "..\..\dist\claude-profile-manager.exe"),
         
         # Installed location relative to module
-        (Join-Path $script:ModuleRoot "..\bin\ClaudeProfileManager.CLI.exe"),
+        (Join-Path $script:ModuleRoot "..\bin\claude-profile-manager.exe"),
         
         # System PATH
-        "ClaudeProfileManager.CLI.exe",
+        "claude-profile-manager.exe",
         
         # Common installation directories
-        "$env:ProgramFiles\ClaudeProfileManager\ClaudeProfileManager.CLI.exe",
-        "$env:ProgramFiles(x86)\ClaudeProfileManager\ClaudeProfileManager.CLI.exe",
-        "$env:LOCALAPPDATA\Programs\ClaudeProfileManager\ClaudeProfileManager.CLI.exe",
+        "$env:ProgramFiles\ClaudeProfileManager\claude-profile-manager.exe",
+        "$env:ProgramFiles(x86)\ClaudeProfileManager\claude-profile-manager.exe",
+        "$env:LOCALAPPDATA\Programs\ClaudeProfileManager\claude-profile-manager.exe",
         
         # Chocolatey installation
-        "$env:ChocolateyInstall\bin\ClaudeProfileManager.CLI.exe",
+        "$env:ChocolateyInstall\bin\claude-profile-manager.exe",
         
         # User profile bin directory  
-        "$env:USERPROFILE\.local\bin\ClaudeProfileManager.CLI.exe",
-        "$env:USERPROFILE\bin\ClaudeProfileManager.CLI.exe"
+        "$env:USERPROFILE\.local\bin\claude-profile-manager.exe",
+        "$env:USERPROFILE\bin\claude-profile-manager.exe"
     )
     
     foreach ($path in $searchPaths) {
@@ -100,19 +101,20 @@ function Get-ClaudeProfileCLIPath {
 Claude Profile Manager CLI executable not found. Please ensure it is installed and available in one of these locations:
 
 Development locations:
-- $script:ModuleRoot\..\ClaudeProfileManager.CLI\bin\Debug\net9.0\ClaudeProfileManager.CLI.exe
-- $script:ModuleRoot\..\ClaudeProfileManager.CLI\bin\Release\net9.0\ClaudeProfileManager.CLI.exe
+- $script:ModuleRoot\..\..\ClaudeProfileManager.CLI\bin\Debug\net9.0\win-x64\claude-profile-manager.exe
+- $script:ModuleRoot\..\..\ClaudeProfileManager.CLI\bin\Release\net9.0\win-x64\claude-profile-manager.exe
+- $script:ModuleRoot\..\..\dist\claude-profile-manager.exe
 
 System PATH or installation directories:
-- $env:ProgramFiles\ClaudeProfileManager\ClaudeProfileManager.CLI.exe
-- $env:LOCALAPPDATA\Programs\ClaudeProfileManager\ClaudeProfileManager.CLI.exe
+- $env:ProgramFiles\ClaudeProfileManager\claude-profile-manager.exe
+- $env:LOCALAPPDATA\Programs\ClaudeProfileManager\claude-profile-manager.exe
 
 To build from source:
 1. Navigate to the windows directory
-2. Run: dotnet build --configuration Release
-3. The executable will be available in ClaudeProfileManager.CLI\bin\Release\net9.0\
+2. Run: dotnet publish --configuration Release -o dist
+3. The executable will be available in dist\claude-profile-manager.exe
 
-To install via Chocolatey (when available):
+To install via Chocolatey:
 choco install claude-profile-manager
 "@
     

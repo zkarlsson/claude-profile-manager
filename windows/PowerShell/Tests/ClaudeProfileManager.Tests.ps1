@@ -32,9 +32,7 @@ Describe "ClaudeProfileManager Module" {
                 'Get-CurrentClaudeProfile',
                 'Set-ClaudeProfileAlias',
                 'Get-ClaudeProfileAlias',
-                'Remove-ClaudeProfileAlias',
-                'Test-ClaudeProfileHealth',
-                'Get-ClaudeProfileStatus'
+                'Remove-ClaudeProfileAlias'
             )
             
             foreach ($cmdlet in $expectedCmdlets) {
@@ -247,34 +245,6 @@ Describe "Switch-ClaudeProfile" {
     }
 }
 
-Describe "Test-ClaudeProfileHealth" {
-    Context "Health Checks" {
-        It "Should perform basic health checks by default" {
-            Mock Get-ClaudeProfileCLIPath { return "C:\test\claude.exe" }
-            Mock Invoke-ClaudeProfileCLI { return "1.0.0" } -ParameterFilter { $Arguments -contains '--version' }
-            
-            $result = Test-ClaudeProfileHealth
-            $result | Should -Not -BeNullOrEmpty
-            $result[0].PSTypeNames | Should -Contain 'ClaudeProfileManager.HealthCheck'
-        }
-        
-        It "Should support quick health checks" {
-            Mock Get-ClaudeProfileCLIPath { return "C:\test\claude.exe" }
-            Mock Invoke-ClaudeProfileCLI { return "1.0.0" }
-            
-            { Test-ClaudeProfileHealth -Quick } | Should -Not -Throw
-        }
-        
-        It "Should support detailed health checks" {
-            Mock Get-ClaudeProfileCLIPath { return "C:\test\claude.exe" }
-            Mock Invoke-ClaudeProfileCLI { return "1.0.0" }
-            Mock Get-ClaudeProfile { return @() }
-            Mock Get-CurrentClaudeProfile { return $null }
-            
-            { Test-ClaudeProfileHealth -Detailed } | Should -Not -Throw
-        }
-    }
-}
 
 Describe "Alias Management" {
     Context "Set-ClaudeProfileAlias" {

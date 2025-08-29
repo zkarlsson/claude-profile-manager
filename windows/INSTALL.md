@@ -18,15 +18,7 @@
 
 ## Installation Methods
 
-### Method 1: MSI Installer (Recommended)
-
-1. Download the MSI installer from the official release
-2. Double-click `claude-profile-manager-1.0.0.msi`
-3. Follow the installation wizard
-4. The application will be installed to `C:\Program Files\ClaudeProfileManager\`
-5. A desktop shortcut will be created (optional)
-
-### Method 2: Chocolatey Package Manager
+### Method 1: Chocolatey Package Manager (Recommended)
 
 ```powershell
 # Install Chocolatey (if not already installed)
@@ -38,7 +30,7 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocola
 choco install claude-profile-manager
 ```
 
-### Method 3: Portable Installation
+### Method 2: Portable Installation
 
 1. Download the portable executable `claude-profile-manager.exe`
 2. Create a folder: `C:\Tools\ClaudeProfileManager\`
@@ -61,26 +53,7 @@ Claude Profile Manager for Windows v1.0.0.0
 Secure authentication profile management for Claude Code CLI
 ```
 
-### 2. Health Check
-
-Verify system integration:
-
-```cmd
-claude-profile-manager health
-```
-
-Expected output:
-```
-Health Check Results:
-
-✓ Application: Running normally
-✓ Profile System: 0 profiles loaded
-✓ Current Profile: None set
-
-✓ All health checks passed
-```
-
-### 3. First Profile Setup
+### 2. First Profile Setup
 
 If you have Claude Code CLI configured, save your first profile:
 
@@ -89,11 +62,6 @@ claude-profile-manager save my-profile
 ```
 
 ## Installation Locations
-
-### MSI Installation
-- **Executable**: `C:\Program Files\ClaudeProfileManager\claude-profile-manager.exe`
-- **Shortcuts**: Desktop and Start Menu (optional)
-- **Registry**: HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\ClaudeProfileManager
 
 ### Chocolatey Installation
 - **Executable**: `C:\ProgramData\chocolatey\lib\claude-profile-manager\tools\claude-profile-manager.exe`
@@ -127,9 +95,6 @@ claude-profile-manager save my-profile
 ### Issue: "Application failed to start"
 **Solution**: Verify .NET 9.0 runtime is available or use self-contained installation
 
-### Issue: "Access denied" during installation
-**Solution**: Run installer as administrator or use portable version
-
 ### Issue: "Command not found" after installation
 **Solution**: 
 1. Restart command prompt/PowerShell
@@ -140,14 +105,9 @@ claude-profile-manager save my-profile
 **Solution**: 
 1. Ensure `%USERPROFILE%\.claude` directory exists
 2. Check write permissions to user profile directory
-3. Run `claude-profile-manager health` for detailed diagnostics
+3. Run `claude-profile-manager list` to verify profile system is working
 
 ## Uninstallation
-
-### MSI Installation
-1. Use Windows "Add or Remove Programs"
-2. Find "Claude Profile Manager" in the list
-3. Click "Uninstall" and follow prompts
 
 ### Chocolatey Installation
 ```powershell
@@ -171,21 +131,15 @@ rmdir /s "%USERPROFILE%\.claude\profiles"
 ## Support and Documentation
 
 - **Quick Help**: `claude-profile-manager --help`
-- **Health Check**: `claude-profile-manager health`
-- **System Status**: `claude-profile-manager status`
+- **List Profiles**: `claude-profile-manager list`
+- **Current Profile**: `claude-profile-manager current`
 - **GitHub Repository**: [Claude Profile Manager](https://github.com/derekspelledcorrectly/claude-profile-manager)
 - **Issue Reporting**: [GitHub Issues](https://github.com/derekspelledcorrectly/claude-profile-manager/issues)
 
 ## Enterprise Deployment
 
-### Group Policy Support
-The MSI installer supports enterprise deployment via Group Policy Software Installation.
-
 ### Silent Installation
-```cmd
-# MSI silent installation
-msiexec /i claude-profile-manager-1.0.0.msi /quiet
-
+```powershell
 # Chocolatey silent installation
 choco install claude-profile-manager -y
 ```

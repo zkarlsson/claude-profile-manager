@@ -1,54 +1,34 @@
 function Remove-ClaudeProfile {
     <#
     .SYNOPSIS
-        Removes a Claude Code CLI profile and its associated credentials.
+        Removes a Claude profile and its associated credentials.
     
     .DESCRIPTION
-        The Remove-ClaudeProfile cmdlet permanently deletes a saved profile and 
-        removes its credentials from Windows Credential Manager. This operation 
-        cannot be undone.
-        
-        If the profile being removed is currently active, you will be prompted 
-        to confirm the operation as it will leave no active profile.
+        The Remove-ClaudeProfile cmdlet deletes a saved Claude Code CLI profile
+        and its associated credentials from the system. This is a PowerShell
+        wrapper around the claude-profile-manager CLI tool.
     
     .PARAMETER Name
         The name of the profile to remove.
     
     .PARAMETER Force
-        Remove the profile without prompting for confirmation.
-    
-    .PARAMETER PassThru
-        Return information about the removed profile.
+        Skip confirmation prompt.
     
     .OUTPUTS
-        None by default. Profile information when -PassThru is specified.
+        None. Success/failure is indicated through Write-Host messages.
     
     .EXAMPLE
         Remove-ClaudeProfile -Name "old-work"
         
-        Removes the "old-work" profile after confirming the operation.
+        Removes the "old-work" profile with confirmation prompt.
     
     .EXAMPLE
-        Remove-ClaudeProfile -Name "temp-profile" -Force
+        Remove-ClaudeProfile "temp" -Force
         
-        Removes the "temp-profile" profile without confirmation.
-    
-    .EXAMPLE
-        Get-ClaudeProfile | Where-Object { $_.LastUsed -lt (Get-Date).AddMonths(-6) } | Remove-ClaudeProfile -Force
-        
-        Removes all profiles that haven't been used in the last 6 months.
-    
-    .EXAMPLE
-        $removed = Remove-ClaudeProfile -Name "deprecated" -Force -PassThru
-        Write-Host "Removed profile: $($removed.Name) (was $($removed.AuthMethod))"
-        
-        Removes a profile and returns information about what was removed.
+        Removes the "temp" profile without confirmation.
     
     .NOTES
-        - This operation permanently deletes the profile and its credentials
-        - If removing the currently active profile, no profile will be active afterward
-        - Credentials are securely removed from Windows Credential Manager
-        - Associated aliases are also removed when a profile is deleted
+        This is a thin wrapper around claude-profile-manager.exe CLI tool.
     
     .LINK
         Save-ClaudeProfile
@@ -57,100 +37,39 @@ function Remove-ClaudeProfile {
     #>
     
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
-    [OutputType([void], ParameterSetName = 'Default')]
-    [OutputType([PSCustomObject], ParameterSetName = 'PassThru')]
     param(
-        [Parameter(
-            Mandatory = $true,
-            Position = 0,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            HelpMessage = "The name of the profile to remove"
-        )]
-        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory = $true, Position = 0)]
         [string]$Name,
         
-        [Parameter(Mandatory = $false)]
-        [switch]$Force,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = 'PassThru')]
-        [switch]$PassThru
+        [Parameter()]
+        [switch]$Force
     )
     
-    begin {
-        Write-Verbose "Starting Remove-ClaudeProfile"
-    }
-    
-    process {
-        try {
-            Write-Verbose "Attempting to remove profile: $Name"
+    try {
+        # Get CLI path
+        $cliPath = Get-ClaudeProfileCLIPath
+        
+        # Build arguments
+        $args = @('delete', $Name)
+        if ($Force) {
+            $args += '--force'
+        }
+        
+        # Confirm the action
+        if ($Force -or $PSCmdlet.ShouldProcess($Name, "Remove Claude Profile")) {
+            # Execute CLI
+            Write-Verbose "Executing: $cliPath $($args -join ' ')"
+            $result = & $cliPath @args 2>&1
             
-            # Get profile information before removal (for PassThru and validation)
-            $profileToRemove = Get-ClaudeProfile -Name $Name -ErrorAction SilentlyContinue
-            
-            if (-not $profileToRemove) {
-                Write-Warning "Profile '$Name' not found"
-                return
-            }
-            
-            # Check if this is the current profile
-            $isCurrentProfile = $profileToRemove.IsCurrent
-            if ($isCurrentProfile) {
-                Write-Warning "Profile '$Name' is currently active. Removing it will leave no active profile."
-            }
-            
-            # Determine confirm preference
-            $confirmPreference = 'High'
-            if ($Force) {
-                $confirmPreference = 'None'
-            }
-            elseif ($isCurrentProfile) {
-                $confirmPreference = 'High'
-            }
-            
-            # Build confirmation message
-            $confirmMessage = "Remove profile '$Name'"
-            if ($isCurrentProfile) {
-                $confirmMessage += " (currently active)"
-            }
-            $confirmMessage += " and its stored credentials"
-            
-            # Confirm the action
-            if ($PSCmdlet.ShouldProcess($confirmMessage, "Remove Claude Profile", $confirmPreference)) {
-                # Build CLI arguments
-                $cliArgs = @('delete', $Name)
-                
-                if ($Force) {
-                    $cliArgs += '--force'
-                }
-                
-                Write-Verbose "Executing CLI delete command"
-                $output = Invoke-ClaudeProfileCLI -Arguments $cliArgs -ThrowOnError
-                
-                Write-Host "✓ Successfully removed profile '$Name'" -ForegroundColor Green
-                
-                # Show warning if this was the current profile
-                if ($isCurrentProfile) {
-                    Write-Warning "No profile is now active. Use Switch-ClaudeProfile to activate a profile."
-                }
-                
-                # Return profile information if requested
-                if ($PassThru) {
-                    Write-Verbose "PassThru requested, returning removed profile information"
-                    return $profileToRemove
-                }
-            }
-            else {
-                Write-Verbose "User cancelled profile removal"
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host $result -ForegroundColor Green
+            } else {
+                throw "CLI command failed: $result"
             }
         }
-        catch {
-            $errorMessage = "Failed to remove Claude profile '$Name': $($_.Exception.Message)"
-            Write-Error $errorMessage -Category InvalidOperation -ErrorAction Stop
-        }
     }
-    
-    end {
-        Write-Verbose "Remove-ClaudeProfile completed"
+    catch {
+        Write-Error "Failed to remove Claude profile: $($_.Exception.Message)"
+        throw
     }
 }

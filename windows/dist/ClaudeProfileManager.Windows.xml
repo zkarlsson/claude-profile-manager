@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ClaudeProfileManager.Windows</name>
+    </assembly>
+    <members>
+        <member name="T:ClaudeProfileManager.Windows.Logging.WindowsCredentialStoreLogMessages">
+            <summary>
+            High-performance, source-generated logging messages for WindowsCredentialStore.
+            Uses LoggerMessage source generator for optimal performance and type safety.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Windows.Program">
+            <summary>
+            Simple CLI entry point for Claude Profile Manager Windows application.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Windows.Security.SecureProfileFileManager">
+            <summary>
+            Secure implementation of profile file manager that applies Windows ACLs to protect profile files.
+            Ensures that profile configuration files can only be accessed by the current user.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.SecureProfileFileManager.LoadProfileAsync(System.String)">
+            <summary>
+            Loads a profile configuration from secure storage.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.SecureProfileFileManager.SaveProfileAsync(System.String,ClaudeProfileManager.Core.Models.Profile)">
+            <summary>
+            Saves a profile configuration to secure storage.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.SecureProfileFileManager.DeleteProfileAsync(System.String)">
+            <summary>
+            Deletes a profile configuration from secure storage.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.SecureProfileFileManager.ListProfilesAsync">
+            <summary>
+            Lists all available profile names.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.SecureProfileFileManager.ProfileExistsAsync(System.String)">
+            <summary>
+            Checks if a profile exists in secure storage.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.SecureProfileFileManager.GetCurrentProfileAsync">
+            <summary>
+            Gets the current active profile name from the .current file.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.SecureProfileFileManager.SetCurrentProfileAsync(System.String)">
+            <summary>
+            Sets the current active profile name in the .current file.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Windows.Security.WindowsAclManager">
+            <summary>
+            Manages Windows Access Control Lists (ACLs) for secure file and directory permissions.
+            Provides enhanced security by restricting access to sensitive files to the current user only.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.WindowsAclManager.SecureFile(System.String)">
+            <summary>
+            Sets restrictive ACLs on a file to allow access only to the current user.
+            Removes all inherited permissions and grants full control only to the owner.
+            </summary>
+            <param name="filePath">Path to the file to secure</param>
+            <returns>True if successful, false otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.WindowsAclManager.SecureDirectory(System.String,System.Boolean)">
+            <summary>
+            Sets restrictive ACLs on a directory to allow access only to the current user.
+            Removes all inherited permissions and grants full control only to the owner.
+            </summary>
+            <param name="directoryPath">Path to the directory to secure</param>
+            <param name="applyToSubItems">Whether to apply permissions to all files and subdirectories</param>
+            <returns>True if successful, false otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.WindowsAclManager.IsFileSecure(System.String)">
+            <summary>
+            Checks if a file has restrictive ACLs (accessible only by owner and SYSTEM).
+            </summary>
+            <param name="filePath">Path to the file to check</param>
+            <returns>True if file has restrictive ACLs, false otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.WindowsAclManager.GetEffectivePermissions(System.String)">
+            <summary>
+            Gets effective permissions for the current user on a file.
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <returns>FileSystemRights for the current user, or null if unable to determine</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.WindowsAclManager.CreateSecureDirectory(System.String)">
+            <summary>
+            Creates a directory with restrictive ACLs if it doesn't exist.
+            </summary>
+            <param name="directoryPath">Path to the directory to create</param>
+            <returns>True if directory was created or already exists with proper security, false otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.Security.WindowsAclManager.RemoveUnauthorizedAccess(System.String)">
+            <summary>
+            Removes all ACL entries except for the current user and SYSTEM.
+            </summary>
+            <param name="filePath">Path to the file to clean up</param>
+            <returns>True if successful, false otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.WindowsClaudeAuthDetector.ConsoleApiKeyRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>^sk-ant-api03-[A-Za-z0-9_-]{80,100}$</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match the string "sk-ant-api03-".<br/>
+            ○ Match a character in the set [-0-9A-Z_a-z] atomically at least 80 and at most 100 times.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.WindowsClaudeAuthDetector.OAuthTokenRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>^\\{.*claudeAiOauth.*\\}$</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled | RegexOptions.Singleline</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match '{'.<br/>
+            ○ Match any character greedily any number of times.<br/>
+            ○ Match the string "claudeAiOauth".<br/>
+            ○ Match any character greedily any number of times.<br/>
+            ○ Match '}'.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:ClaudeProfileManager.Windows.WindowsCredentialStore">
+            <summary>
+            Windows implementation of ICredentialStore using Windows Credential Manager.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.WindowsCredentialStore.SaveCredentialAsync(System.String,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.WindowsCredentialStore.GetCredentialAsync(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.WindowsCredentialStore.DeleteCredentialAsync(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Windows.WindowsCredentialStore.ListProfilesAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the ConsoleApiKeyRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ConsoleApiKeyRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the OAuthTokenRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenRegex_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+    </members>
+</doc>

@@ -5,20 +5,14 @@ function Switch-ClaudeProfile {
     
     .DESCRIPTION
         The Switch-ClaudeProfile cmdlet changes the active authentication profile 
-        for Claude Code CLI. It loads the credentials from the specified profile 
-        and makes them active for subsequent Claude Code CLI operations.
-        
-        After switching profiles, you may need to restart your Claude Code CLI 
-        session to pick up the new credentials.
+        for Claude Code CLI. This is a PowerShell wrapper around the 
+        claude-profile-manager CLI tool.
     
     .PARAMETER Name
         The name of the profile to switch to. This can be either a profile name or an alias.
     
-    .PARAMETER PassThru
-        Return the switched-to profile object.
-    
     .OUTPUTS
-        None by default. ClaudeProfileManager.Profile when -PassThru is specified.
+        None. Success/failure is indicated through Write-Host messages.
     
     .EXAMPLE
         Switch-ClaudeProfile -Name "work"
@@ -26,110 +20,45 @@ function Switch-ClaudeProfile {
         Switches to the "work" profile.
     
     .EXAMPLE
-        Switch-ClaudeProfile -Name "p"
+        Switch-ClaudeProfile "personal"
         
-        Switches to the profile associated with alias "p".
-    
-    .EXAMPLE
-        $currentProfile = Switch-ClaudeProfile -Name "personal" -PassThru
-        Write-Host "Switched to: $($currentProfile.Name) ($($currentProfile.AuthMethod))"
-        
-        Switches profiles and returns the profile object for further processing.
-    
-    .EXAMPLE
-        Get-ClaudeProfile | Where-Object { $_.LastUsed -lt (Get-Date).AddDays(-7) } | Switch-ClaudeProfile
-        
-        Switches to profiles that haven't been used in the last 7 days (pipeline input).
+        Switches to the "personal" profile using positional parameter.
     
     .NOTES
-        - You may need to restart Claude Code CLI after switching profiles
-        - The profile name can be either a direct profile name or an alias
-        - Switching updates the LastUsed timestamp for the profile
-        - The previous profile's credentials are automatically saved before switching
+        This is a thin wrapper around claude-profile-manager.exe CLI tool.
+        You may need to restart Claude Code CLI after switching profiles.
     
     .LINK
         Save-ClaudeProfile
         Get-ClaudeProfile
-        Get-CurrentClaudeProfile
+        Remove-ClaudeProfile
     #>
     
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Low')]
-    [OutputType([void], ParameterSetName = 'Default')]
-    [OutputType([PSCustomObject], ParameterSetName = 'PassThru')]
+    [CmdletBinding()]
     param(
-        [Parameter(
-            Mandatory = $true,
-            Position = 0,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            HelpMessage = "The name of the profile to switch to"
-        )]
-        [ValidateNotNullOrEmpty()]
-        [string]$Name,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = 'PassThru')]
-        [switch]$PassThru
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$Name
     )
     
-    begin {
-        Write-Verbose "Starting Switch-ClaudeProfile"
-    }
-    
-    process {
-        try {
-            Write-Verbose "Switching to profile: $Name"
-            
-            # Check if the profile exists (either as profile name or alias)
-            $allProfiles = Get-ClaudeProfile -ErrorAction SilentlyContinue
-            $targetProfile = $allProfiles | Where-Object { $_.Name -eq $Name }
-            
-            if (-not $targetProfile) {
-                # Check if it's an alias
-                try {
-                    $aliasOutput = Invoke-ClaudeProfileCLI -Arguments @('aliases') -ParseJsonOutput -ThrowOnError:$false
-                    if ($aliasOutput -and $aliasOutput.$Name) {
-                        $actualProfileName = $aliasOutput.$Name
-                        Write-Verbose "Resolved alias '$Name' to profile '$actualProfileName'"
-                        $targetProfile = $allProfiles | Where-Object { $_.Name -eq $actualProfileName }
-                        $Name = $actualProfileName  # Use the actual profile name for CLI command
-                    }
-                }
-                catch {
-                    Write-Verbose "Could not check aliases: $($_.Exception.Message)"
-                }
-            }
-            
-            if (-not $targetProfile) {
-                throw "Profile '$Name' not found. Use Get-ClaudeProfile to see available profiles."
-            }
-            
-            # Confirm the action
-            if ($PSCmdlet.ShouldProcess($Name, "Switch Claude Profile")) {
-                # Build CLI arguments
-                $cliArgs = @('switch', $Name)
-                
-                Write-Verbose "Executing CLI switch command"
-                $output = Invoke-ClaudeProfileCLI -Arguments $cliArgs -ThrowOnError
-                
-                Write-Host "✓ Switched to profile '$Name'" -ForegroundColor Green
-                
-                # Show helpful reminder about restarting CLI
-                Write-Host "💡 You may need to restart Claude Code CLI to use the new credentials" -ForegroundColor Cyan
-                
-                # Return profile object if requested
-                if ($PassThru) {
-                    Write-Verbose "PassThru requested, returning switched profile"
-                    return $targetProfile
-                }
-            }
-        }
-        catch {
-            $errorMessage = "Failed to switch to Claude profile '$Name': $($_.Exception.Message)"
-            Write-Error $errorMessage -Category InvalidOperation -ErrorAction Stop
+    try {
+        # Get CLI path
+        $cliPath = Get-ClaudeProfileCLIPath
+        
+        # Build arguments
+        $args = @('switch', $Name)
+        
+        # Execute CLI
+        Write-Verbose "Executing: $cliPath $($args -join ' ')"
+        $result = & $cliPath @args 2>&1
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host $result -ForegroundColor Green
+        } else {
+            throw "CLI command failed: $result"
         }
     }
-    
-    end {
-        Write-Verbose "Switch-ClaudeProfile completed"
+    catch {
+        Write-Error "Failed to switch Claude profile: $($_.Exception.Message)"
+        throw
     }
 }

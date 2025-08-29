@@ -98,11 +98,6 @@ public class Program
                 case "aliases":
                     return await HandleAliasesCommand();
 
-                case "health":
-                    return await HandleHealthCommand();
-
-                case "status":
-                    return await HandleStatusCommand();
 
                 default:
                     Console.WriteLine($"Unknown command: {command}");
@@ -140,8 +135,6 @@ public class Program
         Console.WriteLine("  alias <alias> <profile>                Create an alias for a profile");
         Console.WriteLine("  unalias <alias>                        Remove an alias");
         Console.WriteLine("  aliases                                 List all aliases");
-        Console.WriteLine("  health                                  Check system health");
-        Console.WriteLine("  status                                  Show system status");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --version, -v    Show version information");
@@ -386,58 +379,4 @@ public class Program
         return 0;
     }
 
-    private static async Task<int> HandleHealthCommand()
-    {
-        Console.WriteLine("Health Check Results:");
-        Console.WriteLine();
-
-        try
-        {
-            // Basic health checks
-            Console.WriteLine("✓ Application: Running normally");
-            
-            // Test profile manager
-            var profiles = await _profileManager!.ListProfilesAsync();
-            Console.WriteLine($"✓ Profile System: {profiles.Count()} profiles loaded");
-            
-            // Test current profile
-            var current = await _profileManager.GetCurrentProfileAsync();
-            Console.WriteLine($"✓ Current Profile: {(current != null ? current : "None set")}");
-
-            Console.WriteLine();
-            Console.WriteLine("✓ All health checks passed");
-            
-            return 0;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"✗ Health check failed: {ex.Message}");
-            return 1;
-        }
-    }
-
-    private static async Task<int> HandleStatusCommand()
-    {
-        try
-        {
-            var profiles = await _profileManager!.ListProfilesAsync();
-            var currentProfileName = await _profileManager.GetCurrentProfileAsync();
-            var aliases = await _profileManager.ListAliasesAsync();
-
-            Console.WriteLine("Claude Profile Manager Status");
-            Console.WriteLine("============================");
-            Console.WriteLine($"Current Profile: {currentProfileName ?? "None"}");
-            Console.WriteLine($"Total Profiles: {profiles.Count()}");
-            Console.WriteLine($"Total Aliases: {aliases.Count}");
-            Console.WriteLine($"System Health: Healthy");
-            Console.WriteLine($"Last Checked: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)}");
-            
-            return 0;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Status check failed: {ex.Message}");
-            return 1;
-        }
-    }
 }

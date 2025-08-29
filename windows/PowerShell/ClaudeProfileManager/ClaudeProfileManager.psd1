@@ -55,7 +55,7 @@ ProcessorArchitecture = 'Amd64'
 # RequiredAssemblies = @()
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-ScriptsToProcess = @('Classes\ValidateProfileName.ps1')
+ScriptsToProcess = @()
 
 # Type files (.ps1xml) to be loaded when importing this module
 # TypesToProcess = @()
@@ -78,11 +78,7 @@ FunctionsToExport = @(
     # Alias Management
     'Set-ClaudeProfileAlias',
     'Get-ClaudeProfileAlias',
-    'Remove-ClaudeProfileAlias',
-    
-    # Health and Diagnostics
-    'Test-ClaudeProfileHealth',
-    'Get-ClaudeProfileStatus'
+    'Remove-ClaudeProfileAlias'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -114,12 +110,7 @@ FileList = @(
     'ClaudeProfileManager.psd1',
     'ClaudeProfileManager.psm1',
     'ClaudeProfileManager.Format.ps1xml',
-    'Classes\ValidateProfileName.ps1',
-    'Private\Invoke-ClaudeProfileCLI.ps1',
     'Private\Get-ClaudeProfileCLIPath.ps1',
-    'Private\ConvertTo-PowerShellObject.ps1',
-    'Private\Test-ProfileNameValidation.ps1',
-    'Private\Test-AliasNameValidation.ps1',
     'Public\Save-ClaudeProfile.ps1',
     'Public\Get-ClaudeProfile.ps1',
     'Public\Switch-ClaudeProfile.ps1',
@@ -128,8 +119,6 @@ FileList = @(
     'Public\Set-ClaudeProfileAlias.ps1',
     'Public\Get-ClaudeProfileAlias.ps1',
     'Public\Remove-ClaudeProfileAlias.ps1',
-    'Public\Test-ClaudeProfileHealth.ps1',
-    'Public\Get-ClaudeProfileStatus.ps1',
     'en-US\about_ClaudeProfileManager.help.txt'
 )
 

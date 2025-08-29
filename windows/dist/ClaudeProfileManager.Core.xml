@@ -1,0 +1,2143 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ClaudeProfileManager.Core</name>
+    </assembly>
+    <members>
+        <member name="T:ClaudeProfileManager.Core.Configuration.ApplicationConfiguration">
+            <summary>
+            Application-wide configuration settings
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.ApplicationConfiguration.Buffers">
+            <summary>
+            Buffer sizes for various I/O operations
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.ApplicationConfiguration.Performance">
+            <summary>
+            Performance tuning settings
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.ApplicationConfiguration.Security">
+            <summary>
+            Security-related settings
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.ApplicationConfiguration.Logging">
+            <summary>
+            Logging configuration
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.ApplicationConfiguration.Paths">
+            <summary>
+            Path configuration
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Configuration.BufferConfiguration">
+            <summary>
+            Buffer size configuration for I/O operations
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.BufferConfiguration.JsonFileBufferSize">
+            <summary>
+            Buffer size for JSON file operations (default: 16KB)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.BufferConfiguration.TextFileBufferSize">
+            <summary>
+            Buffer size for text file operations (default: 4KB)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.BufferConfiguration.JsonSerializationBufferSize">
+            <summary>
+            Buffer size for JSON serialization operations (default: 16KB)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Configuration.PerformanceConfiguration">
+            <summary>
+            Performance tuning configuration
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.PerformanceConfiguration.ErrorSummaryStringBuilderCapacity">
+            <summary>
+            Default capacity for StringBuilder in development error summaries (default: 512)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.PerformanceConfiguration.ExceptionStringBuilderCapacity">
+            <summary>
+            Default capacity for StringBuilder in exception ToString (default: 256)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.PerformanceConfiguration.DetailedMessageStringBuilderCapacity">
+            <summary>
+            Default capacity for StringBuilder in detailed messages (default: 128)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.PerformanceConfiguration.DefaultJsonSizeDevelopment">
+            <summary>
+            Default JSON size estimate for development mode (default: 1024)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.PerformanceConfiguration.DefaultJsonSizeProduction">
+            <summary>
+            Default JSON size estimate for production mode (default: 512)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Configuration.SecurityConfiguration">
+            <summary>
+            Security configuration settings
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.SecurityConfiguration.MaxInputLengthForLogging">
+            <summary>
+            Maximum length for input sanitization in logs (default: 100)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.SecurityConfiguration.AutoCleanupCredentials">
+            <summary>
+            Enable automatic credential cleanup on disposal (default: true)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.SecurityConfiguration.EnableExceptionSanitization">
+            <summary>
+            Enable exception sanitization in logs (default: true)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Configuration.LoggingConfiguration">
+            <summary>
+            Logging configuration settings
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.LoggingConfiguration.IsDebugEnabled">
+            <summary>
+            Enable debug logging based on environment variable (computed at runtime)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.LoggingConfiguration.IsAuditLogEnabled">
+            <summary>
+            Enable audit logging based on environment variable (computed at runtime)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.LoggingConfiguration.EnableStructuredLogging">
+            <summary>
+            Enable structured logging with operation scopes (default: true)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.LoggingConfiguration.MaxLogMessageLength">
+            <summary>
+            Maximum length of log messages before truncation (default: 2000)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Configuration.PathConfiguration">
+            <summary>
+            Path configuration settings
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.PathConfiguration.CustomProfilesDirectory">
+            <summary>
+            Custom profiles directory path (if null, uses default from Constants)
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Configuration.PathConfiguration.GetProfilesDirectory">
+            <summary>
+            Gets the effective profiles directory path
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.PathConfiguration.EnableSecureDirectoryPermissions">
+            <summary>
+            Enable secure directory permissions (default: true)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Configuration.ConfigurationProvider">
+            <summary>
+            Provides application configuration from multiple sources
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Configuration.ConfigurationProvider.Current">
+            <summary>
+            Gets the current application configuration
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Configuration.ConfigurationProvider.SetConfiguration(ClaudeProfileManager.Core.Configuration.ApplicationConfiguration)">
+            <summary>
+            Sets a custom configuration (primarily for testing)
+            </summary>
+            <param name="configuration">The custom configuration</param>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Configuration.ConfigurationProvider.ResetToDefault">
+            <summary>
+            Resets to default configuration
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Configuration.ConfigurationProvider.TryLoadFromFileAsync(System.String)">
+            <summary>
+            Loads configuration from a JSON file if it exists
+            </summary>
+            <param name="configFilePath">Path to the configuration file</param>
+            <returns>True if configuration was loaded successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Configuration.ConfigurationProvider.TrySaveToFileAsync(System.String)">
+            <summary>
+            Saves current configuration to a JSON file
+            </summary>
+            <param name="configFilePath">Path to save the configuration file</param>
+            <returns>True if configuration was saved successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Configuration.ConfigurationProvider.GetDefaultConfigFilePath">
+            <summary>
+            Gets the default configuration file path
+            </summary>
+            <returns>Path to the default configuration file</returns>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Constants">
+            <summary>
+            Constants used throughout the Claude Profile Manager application.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.ClaudeDirectoryName">
+            <summary>
+            The default directory name for Claude settings (under user profile).
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.ProfilesDirectoryName">
+            <summary>
+            The subdirectory name for profile storage.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.CurrentProfileFileName">
+            <summary>
+            The filename for storing the current active profile.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.AliasesFileName">
+            <summary>
+            The filename for storing profile aliases.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.AuditLogFileName">
+            <summary>
+            The filename for audit logging (when enabled).
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.ConfigFileName">
+            <summary>
+            The filename for application configuration.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.ProfileFileExtension">
+            <summary>
+            The file extension for profile metadata files.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.ClaudeCodeServiceName">
+            <summary>
+            The Windows Credential Manager service name for Claude Code console authentication.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.ClaudeCodeCredentialsServiceName">
+            <summary>
+            The Windows Credential Manager service name for Claude Code subscription authentication.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.ProfileManagerServiceName">
+            <summary>
+            The Windows Credential Manager service name for Claude Profile Manager credential backups.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.DebugEnvironmentVariable">
+            <summary>
+            Environment variable name for enabling debug logging.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Constants.AuditLogEnvironmentVariable">
+            <summary>
+            Environment variable name for enabling audit logging.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Constants.GetProfilesDirectory">
+            <summary>
+            Gets the full path to the Claude profiles directory.
+            </summary>
+            <returns>The full path to the profiles directory</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Constants.GetProfileFilePath(System.String)">
+            <summary>
+            Gets the full path to a profile metadata file.
+            </summary>
+            <param name="profileName">The profile name</param>
+            <returns>The full path to the profile file</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Constants.GetCurrentProfileFilePath">
+            <summary>
+            Gets the full path to the current profile file.
+            </summary>
+            <returns>The full path to the current profile file</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Constants.GetAliasesFilePath">
+            <summary>
+            Gets the full path to the aliases file.
+            </summary>
+            <returns>The full path to the aliases file</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Constants.GetAuditLogFilePath">
+            <summary>
+            Gets the full path to the audit log file.
+            </summary>
+            <returns>The full path to the audit log file</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Constants.GetConfigFilePath">
+            <summary>
+            Gets the full path to the configuration file.
+            </summary>
+            <returns>The full path to the configuration file</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Constants.IsDebugEnabled">
+            <summary>
+            Checks if debug logging is enabled via environment variable.
+            </summary>
+            <returns>True if debug logging is enabled</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Constants.IsAuditLogEnabled">
+            <summary>
+            Checks if audit logging is enabled via environment variable.
+            </summary>
+            <returns>True if audit logging is enabled</returns>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector">
+            <summary>
+            Detects and analyzes Claude Code CLI authentication methods and status.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector.DetectCurrentAuthMethodAsync">
+            <summary>
+            Detects the current authentication method used by Claude Code.
+            </summary>
+            <returns>The detected authentication method</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector.DetectProfileAuthMethodAsync(System.String)">
+            <summary>
+            Detects the authentication method for a specific profile.
+            </summary>
+            <param name="profileName">The profile name to check</param>
+            <returns>The authentication method for the profile</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector.GetConsoleApiKeyAsync">
+            <summary>
+            Gets the current console API key from Claude Code's credential storage.
+            </summary>
+            <returns>The API key if found, null otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector.GetSubscriptionTokenAsync">
+            <summary>
+            Gets the current subscription token from Claude Code's credential storage.
+            </summary>
+            <returns>The subscription token if found, null otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector.SaveConsoleApiKeyAsync(System.String)">
+            <summary>
+            Saves a console API key to Claude Code's credential storage.
+            </summary>
+            <param name="apiKey">The API key to save</param>
+            <returns>True if saved successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector.SaveSubscriptionTokenAsync(System.String)">
+            <summary>
+            Saves a subscription token to Claude Code's credential storage.
+            </summary>
+            <param name="token">The subscription token to save</param>
+            <returns>True if saved successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector.GetTokenHealthAsync(System.String)">
+            <summary>
+            Analyzes the health status of a subscription token.
+            </summary>
+            <param name="token">The subscription token to analyze</param>
+            <returns>A human-readable status description</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IClaudeAuthDetector.ValidateCredentialFormat(System.String,ClaudeProfileManager.Core.Models.AuthMethod)">
+            <summary>
+            Validates that a credential appears to be the correct format for the specified auth method.
+            </summary>
+            <param name="credential">The credential to validate</param>
+            <param name="authMethod">The expected authentication method</param>
+            <returns>True if the credential format is valid</returns>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Interfaces.ICredentialStore">
+            <summary>
+            Provides secure storage and retrieval of authentication credentials.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.ICredentialStore.SaveCredentialAsync(System.String,System.String,System.String)">
+            <summary>
+            Saves a credential to secure storage.
+            </summary>
+            <param name="profileName">The profile name to associate with the credential</param>
+            <param name="credential">The credential data to store securely</param>
+            <param name="serviceType">The service type (e.g., "Claude Code", "Claude Profile Manager")</param>
+            <returns>True if the credential was saved successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.ICredentialStore.GetCredentialAsync(System.String,System.String)">
+            <summary>
+            Retrieves a credential from secure storage.
+            </summary>
+            <param name="profileName">The profile name associated with the credential</param>
+            <param name="serviceType">The service type (e.g., "Claude Code", "Claude Profile Manager")</param>
+            <returns>The credential data if found, null otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.ICredentialStore.DeleteCredentialAsync(System.String,System.String)">
+            <summary>
+            Deletes a credential from secure storage.
+            </summary>
+            <param name="profileName">The profile name associated with the credential</param>
+            <param name="serviceType">The service type (e.g., "Claude Code", "Claude Profile Manager")</param>
+            <returns>True if the credential was deleted successfully or didn't exist</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.ICredentialStore.ListProfilesAsync(System.String)">
+            <summary>
+            Lists all profile names that have stored credentials for the specified service.
+            </summary>
+            <param name="serviceType">The service type to search for</param>
+            <returns>A collection of profile names with stored credentials</returns>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Interfaces.IProfileManager">
+            <summary>
+            Manages Claude authentication profiles and their metadata.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.SaveProfileAsync(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new profile with the current authentication credentials.
+            </summary>
+            <param name="profileName">The name of the profile to create</param>
+            <param name="aliases">Optional aliases for the profile</param>
+            <returns>True if the profile was created successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.GetProfileAsync(System.String)">
+            <summary>
+            Retrieves a profile by name.
+            </summary>
+            <param name="profileName">The name of the profile to retrieve</param>
+            <returns>The profile if found, null otherwise</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.ListProfilesAsync">
+            <summary>
+            Lists all available profiles with their metadata.
+            </summary>
+            <returns>A collection of all profiles</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.SwitchToProfileAsync(System.String)">
+            <summary>
+            Switches to the specified profile, making it the active authentication.
+            </summary>
+            <param name="profileName">The name of the profile to switch to</param>
+            <returns>True if the switch was successful</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.GetCurrentProfileAsync">
+            <summary>
+            Gets the currently active profile name.
+            </summary>
+            <returns>The name of the current profile, or null if no profile is active</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.DeleteProfileAsync(System.String)">
+            <summary>
+            Deletes a profile and its associated credentials.
+            </summary>
+            <param name="profileName">The name of the profile to delete</param>
+            <returns>True if the profile was deleted successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.AddAliasAsync(System.String,System.String)">
+            <summary>
+            Adds an alias for an existing profile.
+            </summary>
+            <param name="aliasName">The alias name to create</param>
+            <param name="profileName">The target profile name</param>
+            <returns>True if the alias was added successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.RemoveAliasAsync(System.String)">
+            <summary>
+            Removes an alias.
+            </summary>
+            <param name="aliasName">The alias name to remove</param>
+            <returns>True if the alias was removed successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.ListAliasesAsync">
+            <summary>
+            Lists all defined aliases.
+            </summary>
+            <returns>A dictionary of alias names and their target profiles</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.IProfileManager.ResolveAliasAsync(System.String)">
+            <summary>
+            Resolves an alias to its target profile name.
+            </summary>
+            <param name="nameOrAlias">The profile name or alias to resolve</param>
+            <returns>The resolved profile name</returns>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Interfaces.ISecureCredentialStore">
+            <summary>
+            Enhanced credential store interface with secure memory handling
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.ISecureCredentialStore.SaveSecureCredentialAsync(System.String,System.Security.SecureString,System.String)">
+            <summary>
+            Saves a credential using SecureString for memory protection
+            </summary>
+            <param name="profileName">Name of the profile or credential identifier</param>
+            <param name="secureCredential">Credential data in SecureString format</param>
+            <param name="serviceType">Service type identifier (default: "Claude Profile Manager")</param>
+            <returns>True if the credential was saved successfully</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Interfaces.ISecureCredentialStore.GetSecureCredentialAsync(System.String,System.String)">
+            <summary>
+            Retrieves a credential as a secure scope for automatic cleanup
+            </summary>
+            <param name="profileName">Name of the profile or credential identifier</param>
+            <param name="serviceType">Service type identifier (default: "Claude Profile Manager")</param>
+            <returns>SecureCredentialScope that automatically cleans up memory on disposal</returns>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.IO.OptimizedFileOperations">
+            <summary>
+            Optimized file operations with caching, buffering, and reduced ACL overhead
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.GetSecureFileSecurity">
+            <summary>
+            Gets a cached secure file security descriptor for the current user
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.GetSecureDirectorySecurity">
+            <summary>
+            Gets a cached secure directory security descriptor for the current user
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.DirectoryExistsCached(System.String)">
+            <summary>
+            Efficiently checks if directory exists with caching
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.CreateSecureDirectory(System.String)">
+            <summary>
+            Creates directory with secure permissions and caching
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.WriteJsonAtomicAsync``1(System.String,``0,System.Text.Json.JsonSerializerOptions,System.Threading.CancellationToken)">
+            <summary>
+            Atomic write operation with secure permissions and optimized JSON serialization
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.ReadJsonAsync``1(System.String,System.Text.Json.JsonSerializerOptions,System.Threading.CancellationToken)">
+            <summary>
+            Optimized JSON deserialization with streaming and source generation
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.WriteTextAtomicAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Atomic write operation for text with secure permissions
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.ReadTextAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Optimized text reading with proper encoding
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.EnumerateJsonFiles(System.String,System.String)">
+            <summary>
+            Optimized directory enumeration without loading all files into memory
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.ClearDirectoryCache">
+            <summary>
+            Clears the directory existence cache (useful for testing)
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.IO.OptimizedFileOperations.ClearSecurityCache">
+            <summary>
+            Clears the security cache (useful for testing or user context changes)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Json.OptimizedJsonOperations">
+            <summary>
+            High-performance JSON operations using source generation and memory optimization
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.SerializeToUtf8BytesAsync``1(``0,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Efficiently serializes an object to JSON using source generation
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.DeserializeFromUtf8Bytes``1(System.ReadOnlyMemory{System.Byte},System.Boolean)">
+            <summary>
+            Efficiently deserializes JSON from UTF-8 bytes using source generation
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.SerializeToStreamAsync``1(System.IO.Stream,``0,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Efficiently serializes to stream with source generation and buffer pooling
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.DeserializeFromStreamAsync``1(System.IO.Stream,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Efficiently deserializes from stream with source generation
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.SerializeProfileAsync(ClaudeProfileManager.Core.Models.Profile,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Optimized Profile serialization with type-specific optimizations
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.DeserializeProfile(System.ReadOnlyMemory{System.Byte},System.Boolean)">
+            <summary>
+            Optimized Profile deserialization with type-specific optimizations  
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.SerializeAliasesAsync(System.Collections.Generic.Dictionary{System.String,System.String},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Optimized Dictionary serialization for aliases
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.DeserializeAliases(System.ReadOnlyMemory{System.Byte},System.Boolean)">
+            <summary>
+            Optimized Dictionary deserialization for aliases
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.IsValidJson(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Validates JSON content without full deserialization (for performance)
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.OptimizedJsonOperations.EstimateJsonSize``1(``0,System.Boolean)">
+            <summary>
+            Gets estimated JSON size for pre-allocation optimization
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Json.ProfileJsonContext">
+            <summary>
+            Source-generated JSON serialization context for optimal performance
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContext.AuthMethod">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContext.Profile">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContext.DictionaryStringString">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContext.ListProfile">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContext.DateTime">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.ProfileJsonContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.ProfileJsonContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.ProfileJsonContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty">
+            <summary>
+            Development context with pretty-printing enabled
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.AuthMethod">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.Profile">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.DictionaryStringString">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.ListProfile">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.DateTime">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.ProfileJsonContextPretty.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Json.JsonOptionsProvider">
+            <summary>
+            Optimized JSON serializer options provider with caching
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.JsonOptionsProvider.Production">
+            <summary>
+            Gets optimized production JSON options (compact, source-generated)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Json.JsonOptionsProvider.Development">
+            <summary>
+            Gets development JSON options (pretty-printed, source-generated)
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Json.JsonOptionsProvider.ForEnvironment(System.Boolean)">
+            <summary>
+            Gets JSON options based on environment (development vs production)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Logging.CircuitBreakerLogMessages">
+            <summary>
+            High-performance, source-generated logging messages for CircuitBreaker operations.
+            Uses LoggerMessage source generator for optimal performance and type safety.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Logging.ResilientCredentialStoreLogMessages">
+            <summary>
+            High-performance, source-generated logging messages for ResilientCredentialStore operations.
+            Uses LoggerMessage source generator for optimal performance and type safety.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Logging.SanitizedLoggingProvider">
+            <summary>
+            A logging provider that automatically sanitizes exceptions in log messages
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Logging.SanitizedLogger">
+            <summary>
+            A logger that automatically sanitizes exceptions before passing them to the inner logger
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Logging.StandardizedErrorHandlerLogMessages">
+            <summary>
+            High-performance, source-generated logging messages for StandardizedErrorHandler.
+            Uses LoggerMessage source generator for optimal performance and type safety.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Models.AuthMethod">
+            <summary>
+            Represents the different authentication methods supported by Claude Code CLI.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Models.AuthMethod.None">
+            <summary>
+            No authentication configured.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Models.AuthMethod.Console">
+            <summary>
+            Console API key authentication (static API key).
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Models.AuthMethod.Subscription">
+            <summary>
+            Subscription OAuth token authentication (dynamic tokens with refresh).
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Models.AuthMethod.Unknown">
+            <summary>
+            Authentication method could not be determined.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Models.Profile">
+            <summary>
+            Represents a Claude authentication profile with metadata.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.Profile.Name">
+            <summary>
+            The unique name of the profile.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.Profile.Created">
+            <summary>
+            The timestamp when the profile was created (ISO 8601 format).
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.Profile.AuthMethod">
+            <summary>
+            The authentication method used by this profile.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.Profile.LastUsed">
+            <summary>
+            The timestamp when the profile was last used (ISO 8601 format).
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.Profile.Aliases">
+            <summary>
+            Aliases associated with this profile.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.Profile.TokenHealth">
+            <summary>
+            The health status of the authentication token (for subscription profiles).
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.Profile.IsCurrent">
+            <summary>
+            Indicates whether this is the currently active profile.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.Profile.#ctor(System.String,ClaudeProfileManager.Core.Models.AuthMethod)">
+            <summary>
+            Creates a new profile with the current timestamp.
+            </summary>
+            <param name="name">The profile name</param>
+            <param name="authMethod">The authentication method</param>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.Profile.#ctor">
+            <summary>
+            Default constructor for JSON deserialization.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.Profile.UpdateLastUsed">
+            <summary>
+            Updates the last used timestamp to the current time.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.Profile.GetFormattedCreatedDate">
+            <summary>
+            Gets a formatted string representation of when the profile was created.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.Profile.GetFormattedLastUsedDate">
+            <summary>
+            Gets a formatted string representation of when the profile was last used.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.Profile.GetDisplayName">
+            <summary>
+            Gets the display name including aliases.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Models.ProfileValidation">
+            <summary>
+            Provides validation for profile names and aliases.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Models.ProfileValidation.MaxProfileNameLength">
+            <summary>
+            Maximum allowed length for profile names.
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Models.ProfileValidation.ValidNamePattern">
+            <summary>
+            Regex pattern for valid profile names (alphanumeric, dash, underscore only).
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Models.ProfileValidation.ReservedNames">
+            <summary>
+            Reserved profile names that cannot be used.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.ProfileValidation.ValidateProfileName(System.String)">
+            <summary>
+            Validates a profile name according to the rules.
+            </summary>
+            <param name="name">The profile name to validate</param>
+            <returns>A validation result with success status and error message</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.ProfileValidation.ValidateAliasName(System.String)">
+            <summary>
+            Validates an alias name (follows same rules as profile names).
+            </summary>
+            <param name="aliasName">The alias name to validate</param>
+            <returns>A validation result with success status and error message</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.ProfileValidation.ValidateCredentialFormat(System.String,ClaudeProfileManager.Core.Models.AuthMethod)">
+            <summary>
+            Validates that a credential appears to be the correct format for the specified auth method.
+            </summary>
+            <param name="credential">The credential to validate</param>
+            <param name="authMethod">The expected authentication method</param>
+            <returns>A validation result with success status and error message</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.ProfileValidation.ValidateConsoleApiKey(System.String)">
+            <summary>
+            Validates that a string appears to be a valid Console API key.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.ProfileValidation.ValidateSubscriptionToken(System.String)">
+            <summary>
+            Validates that a string appears to be a valid subscription token.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Models.ValidationResult">
+            <summary>
+            Represents the result of a validation operation.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.ValidationResult.IsValid">
+            <summary>
+            Indicates whether the validation was successful.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Models.ValidationResult.ErrorMessage">
+            <summary>
+            The error message if validation failed, null if successful.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.ValidationResult.Success">
+            <summary>
+            Creates a successful validation result.
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.ValidationResult.Failure(System.String)">
+            <summary>
+            Creates a failed validation result with an error message.
+            </summary>
+            <param name="errorMessage">The error message describing why validation failed</param>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Models.ValidationResult.op_Implicit(ClaudeProfileManager.Core.Models.ValidationResult)~System.Boolean">
+            <summary>
+            Implicitly converts a ValidationResult to a boolean.
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Resilience.CircuitBreaker`1">
+            <summary>
+            Generic circuit breaker implementation for protecting against cascading failures
+            </summary>
+            <typeparam name="T">The return type of the protected operations</typeparam>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Resilience.CircuitBreaker`1.State">
+            <summary>
+            Current state of the circuit breaker
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreaker`1.ExecuteAsync(System.Func{System.Threading.Tasks.Task{`0}},System.Threading.CancellationToken)">
+            <summary>
+            Executes an operation with circuit breaker protection
+            </summary>
+            <param name="operation">The operation to execute</param>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>Result of the operation</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreaker`1.Execute(System.Func{`0})">
+            <summary>
+            Executes an operation with circuit breaker protection (synchronous version)
+            </summary>
+            <param name="operation">The operation to execute</param>
+            <returns>Result of the operation</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreaker`1.GetMetrics">
+            <summary>
+            Gets circuit breaker metrics for monitoring
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreaker`1.Reset">
+            <summary>
+            Manually resets the circuit breaker to closed state (for testing/emergency)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Resilience.CircuitBreakerMetrics">
+            <summary>
+            Circuit breaker metrics for monitoring and diagnostics
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Resilience.CircuitBreakerOpenException">
+            <summary>
+            Exception thrown when a circuit breaker is in the open state
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Resilience.CircuitBreakerOpenException.CircuitBreakerName">
+            <summary>
+            The name of the circuit breaker that is open
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Resilience.CircuitBreakerOpenException.NextAttemptTime">
+            <summary>
+            When the circuit breaker will next attempt to transition to half-open
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Resilience.CircuitBreakerManager">
+            <summary>
+            Manages multiple circuit breakers for different operations
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreakerManager.GetCircuitBreaker``1(System.String,ClaudeProfileManager.Core.Resilience.CircuitBreakerConfiguration)">
+            <summary>
+            Gets or creates a circuit breaker for the specified operation
+            </summary>
+            <typeparam name="T">The return type of the protected operation</typeparam>
+            <param name="name">Unique name for the circuit breaker</param>
+            <param name="configuration">Optional custom configuration</param>
+            <returns>Circuit breaker instance</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreakerManager.GetAllMetrics">
+            <summary>
+            Gets metrics for all circuit breakers
+            </summary>
+            <returns>Dictionary of circuit breaker metrics</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreakerManager.ResetAll">
+            <summary>
+            Resets all circuit breakers to closed state
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreakerManager.RemoveCircuitBreaker(System.String)">
+            <summary>
+            Removes a circuit breaker by name
+            </summary>
+            <param name="name">Name of the circuit breaker to remove</param>
+            <returns>True if the circuit breaker was removed</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.CircuitBreakerManager.GetCircuitBreakerNames">
+            <summary>
+            Gets the names of all registered circuit breakers
+            </summary>
+            <returns>List of circuit breaker names</returns>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Resilience.CircuitBreakerState">
+            <summary>
+            Represents the state of a circuit breaker
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Resilience.CircuitBreakerState.Closed">
+            <summary>
+            Circuit is closed - normal operations
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Resilience.CircuitBreakerState.Open">
+            <summary>
+            Circuit is open - failing fast, not allowing operations
+            </summary>
+        </member>
+        <member name="F:ClaudeProfileManager.Core.Resilience.CircuitBreakerState.HalfOpen">
+            <summary>
+            Circuit is half-open - allowing limited operations to test if service has recovered
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Resilience.CircuitBreakerConfiguration">
+            <summary>
+            Configuration for circuit breaker behavior
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Resilience.CircuitBreakerConfiguration.FailureThreshold">
+            <summary>
+            Number of consecutive failures before opening the circuit (default: 5)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Resilience.CircuitBreakerConfiguration.RecoveryTimeout">
+            <summary>
+            Time to wait before attempting to close the circuit after it opens (default: 30 seconds)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Resilience.CircuitBreakerConfiguration.SuccessThreshold">
+            <summary>
+            Number of successful operations in half-open state needed to close the circuit (default: 3)
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Resilience.CircuitBreakerConfiguration.HalfOpenMaxConcurrency">
+            <summary>
+            Maximum number of concurrent operations allowed in half-open state (default: 1)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore">
+            <summary>
+            Resilient wrapper for ISecureCredentialStore that provides circuit breaker protection
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore.SaveCredentialAsync(System.String,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore.GetCredentialAsync(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore.DeleteCredentialAsync(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore.ListProfilesAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore.SaveSecureCredentialAsync(System.String,System.Security.SecureString,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore.GetSecureCredentialAsync(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore.GetCircuitBreakerMetrics">
+            <summary>
+            Gets circuit breaker metrics for monitoring credential store operations
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Resilience.ResilientCredentialStore.ResetCircuitBreakers">
+            <summary>
+            Resets all circuit breakers (for testing/emergency use)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Security.ExceptionSanitizer">
+            <summary>
+            Provides exception sanitization to prevent information disclosure through error messages
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.ApiKeyPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>sk-ant-[A-Za-z0-9_-]+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [Ss].<br/>
+            ○ Match a character in the set [Kk\u212A].<br/>
+            ○ Match '-'.<br/>
+            ○ Match a character in the set [Aa].<br/>
+            ○ Match a character in the set [Nn].<br/>
+            ○ Match a character in the set [Tt].<br/>
+            ○ Match '-'.<br/>
+            ○ Match a character in the set [-0-9A-Z_a-z\u212A] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.BearerTokenPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>Bearer\\s+[A-Za-z0-9._-]+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [Bb].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Aa].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match a whitespace character atomically at least once.<br/>
+            ○ Match a character in the set [-.0-9A-Z_a-z\u212A] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.OAuthTokenPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>"claudeAiOauth":\\s*\\{[^}]*\\}</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match '"'.<br/>
+            ○ Match a character in the set [Cc].<br/>
+            ○ Match a character in the set [Ll].<br/>
+            ○ Match a character in the set [Aa].<br/>
+            ○ Match a character in the set [Uu].<br/>
+            ○ Match a character in the set [Dd].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Aa].<br/>
+            ○ Match a character in the set [Ii].<br/>
+            ○ Match a character in the set [Oo].<br/>
+            ○ Match a character in the set [Aa].<br/>
+            ○ Match a character in the set [Uu].<br/>
+            ○ Match a character in the set [Tt].<br/>
+            ○ Match a character in the set [Hh].<br/>
+            ○ Match the string "\":".<br/>
+            ○ Match a whitespace character atomically any number of times.<br/>
+            ○ Match '{'.<br/>
+            ○ Match a character other than '}' atomically any number of times.<br/>
+            ○ Match '}'.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.CredentialPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>(password|pwd|secret|key|token|credential)["'\\s]*[:=]["'\\s]*[^"'\\s,}]+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ 1st capture group.<br/>
+                ○ Match with 5 alternative expressions.<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Pp].<br/>
+                        ○ Match with 2 alternative expressions.<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match an empty string.<br/>
+                                ○ Match a character in the set [Ss] exactly 2 times.<br/>
+                                ○ Match a character in the set [Ww].<br/>
+                                ○ Match a character in the set [Oo].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                                ○ Match a character in the set [Dd].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match an empty string.<br/>
+                                ○ Match a character in the set [Dd].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Ss].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Cc].<br/>
+                        ○ Match a character in the set [Rr].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Kk\u212A].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Yy].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Oo].<br/>
+                        ○ Match a character in the set [Kk\u212A].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [Cc].<br/>
+                        ○ Match a character in the set [Rr].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Dd].<br/>
+                        ○ Match a character in the set [Ee].<br/>
+                        ○ Match a character in the set [Nn].<br/>
+                        ○ Match a character in the set [Tt].<br/>
+                        ○ Match a character in the set [Ii].<br/>
+                        ○ Match a character in the set [Aa].<br/>
+                        ○ Match a character in the set [Ll].<br/>
+            ○ Match a character in the set ["'\s] atomically any number of times.<br/>
+            ○ Match a character in the set [:=].<br/>
+            ○ Match a character in the set ["'\s] greedily any number of times.<br/>
+            ○ Match a character in the set [^"',}\s] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.UserPathPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>C:\\\\Users\\\\[^\\\\]+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [Cc].<br/>
+            ○ Match the string ":\\".<br/>
+            ○ Match a character in the set [Uu].<br/>
+            ○ Match a character in the set [Ss].<br/>
+            ○ Match a character in the set [Ee].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match a character in the set [Ss].<br/>
+            ○ Match '\\'.<br/>
+            ○ Match a character other than '\\' atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.WindowsPathPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>[A-Za-z]:\\\\(?!Users\\\\)[^\\s"']+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [A-Za-z].<br/>
+            ○ Match the string ":\\".<br/>
+            ○ Zero-width negative lookahead.<br/>
+                ○ Match the string "Users\\".<br/>
+            ○ Match a character in the set [^"'\s] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.UnixPathPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>/[^"'\\s,}]*</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match '/'.<br/>
+            ○ Match a character in the set [^"',}\s] atomically any number of times.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.StackTraceFilePattern">
+            <remarks>
+            Pattern:<br/>
+            <code>at\\s+[A-Za-z0-9_.]+\\.[A-Za-z0-9_&lt;&gt;]+\\([^)]*\\)\\s+in\\s+[^\\r\\n]+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match the string "at".<br/>
+            ○ Match a whitespace character atomically at least once.<br/>
+            ○ Match a character in the set [.0-9A-Z_a-z] greedily at least once.<br/>
+            ○ Match '.'.<br/>
+            ○ Match a character in the set [0-9&lt;&gt;A-Z_a-z] atomically at least once.<br/>
+            ○ Match '('.<br/>
+            ○ Match a character other than ')' atomically any number of times.<br/>
+            ○ Match ')'.<br/>
+            ○ Match a whitespace character atomically at least once.<br/>
+            ○ Match the string "in".<br/>
+            ○ Match a whitespace character greedily at least once.<br/>
+            ○ Match a character in the set [^\n\r] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.Sanitize(System.Exception,System.Boolean)">
+            <summary>
+            Sanitizes an exception for safe logging and user display
+            </summary>
+            <param name="exception">The exception to sanitize</param>
+            <param name="isDevelopment">Whether to preserve debugging information</param>
+            <returns>A sanitized exception with sensitive information removed</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.SanitizeMessage(System.String)">
+            <summary>
+            Sanitizes an exception message for safe display
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.SanitizeStackTrace(System.String)">
+            <summary>
+            Sanitizes a stack trace for development debugging while removing sensitive paths
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.GetUserFriendlyMessage(System.Exception,System.String)">
+            <summary>
+            Gets a user-friendly error message based on exception type and context
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.CreateDevelopmentErrorSummary(System.Exception,System.String)">
+            <summary>
+            Creates a development-friendly error summary with sanitized details
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.ExceptionSanitizer.ContainsSensitiveInformation(System.Exception)">
+            <summary>
+            Determines if an exception contains potentially sensitive information
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Security.SanitizedExceptionData">
+            <summary>
+            Represents sanitized exception data safe for logging and user display
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.SanitizedExceptionData.#ctor(System.String,System.String,System.String,ClaudeProfileManager.Core.Security.SanitizedExceptionData)">
+            <summary>
+            Represents sanitized exception data safe for logging and user display
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.SanitizedExceptionData.ToString">
+            <summary>
+            Converts the sanitized exception to a user-friendly string
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.SanitizedExceptionData.GetSimpleMessage">
+            <summary>
+            Gets a simple error message suitable for end users
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.SanitizedExceptionData.GetDetailedMessage">
+            <summary>
+            Gets detailed information suitable for logging (still sanitized)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Security.SecureCredentialHandler">
+            <summary>
+            Provides secure handling of credential data with automatic memory cleanup
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.SecureCredentialHandler.ToSecureString(System.String)">
+            <summary>
+            Converts a string to SecureString
+            Note: The original string cannot be reliably cleared from memory in .NET
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Security.SecureCredentialHandler.GetCredential(System.Security.SecureString)">
+            <summary>
+            Converts SecureString back to string with automatic cleanup using 'using' pattern
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Security.SecureCredentialScope">
+            <summary>
+            Provides secure access to credential data with automatic cleanup
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Security.SecureCredentialScope.Value">
+            <summary>
+            Gets the credential value. Only valid within the scope of this object.
+            </summary>
+        </member>
+        <member name="P:ClaudeProfileManager.Core.Security.SecureCredentialScope.IsEmpty">
+            <summary>
+            Checks if the credential is null or empty
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Services.StandardizedErrorHandler">
+            <summary>
+            Provides standardized error handling across the application
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Services.StandardizedErrorHandler.HandleException``1(Microsoft.Extensions.Logging.ILogger{``0},System.Exception,System.String,System.Object[])">
+            <summary>
+            Handles exceptions with standardized logging and sanitization
+            </summary>
+            <typeparam name="T">The logger type</typeparam>
+            <param name="logger">The logger instance</param>
+            <param name="exception">The exception to handle</param>
+            <param name="operation">The operation that failed</param>
+            <param name="context">Additional context parameters</param>
+            <returns>False for boolean operations</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Services.StandardizedErrorHandler.HandleException``2(Microsoft.Extensions.Logging.ILogger{``0},System.Exception,System.String,System.Object[])">
+            <summary>
+            Handles exceptions for operations that return nullable results
+            </summary>
+            <typeparam name="T">The logger type</typeparam>
+            <typeparam name="TResult">The result type</typeparam>
+            <param name="logger">The logger instance</param>
+            <param name="exception">The exception to handle</param>
+            <param name="operation">The operation that failed</param>
+            <param name="context">Additional context parameters</param>
+            <returns>Null for nullable operations</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Services.StandardizedErrorHandler.LogValidationError``1(Microsoft.Extensions.Logging.ILogger{``0},System.String,System.String,System.String)">
+            <summary>
+            Logs validation errors with standardized format
+            </summary>
+            <typeparam name="T">The logger type</typeparam>
+            <param name="logger">The logger instance</param>
+            <param name="operation">The operation being validated</param>
+            <param name="validationError">The validation error message</param>
+            <param name="input">The invalid input (sanitized)</param>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Services.StandardizedErrorHandler.CreateOperationScope``1(Microsoft.Extensions.Logging.ILogger{``0},System.String,System.Object[])">
+            <summary>
+            Creates a standardized scope for operations
+            </summary>
+            <typeparam name="T">The logger type</typeparam>
+            <param name="logger">The logger instance</param>
+            <param name="operation">The operation name</param>
+            <param name="context">Additional context parameters</param>
+            <returns>A disposable scope</returns>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Services.StandardizedErrorHandler.HandleWin32Error``1(Microsoft.Extensions.Logging.ILogger{``0},System.String,System.Int32,System.Object[])">
+            <summary>
+            Handles Win32 API errors with standardized logging
+            </summary>
+            <typeparam name="T">The logger type</typeparam>
+            <param name="logger">The logger instance</param>
+            <param name="operation">The Win32 operation that failed</param>
+            <param name="errorCode">The Win32 error code</param>
+            <param name="context">Additional context parameters</param>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Validation.InputValidator">
+            <summary>
+            Provides comprehensive input validation and sanitization for security
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.ProfileNamePattern">
+            <remarks>
+            Pattern:<br/>
+            <code>^[a-zA-Z0-9._-]{1,64}$</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match a character in the set [-.0-9A-Z_a-z] atomically at least 1 and at most 64 times.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.AliasNamePattern">
+            <remarks>
+            Pattern:<br/>
+            <code>^[a-zA-Z0-9_-]{1,32}$</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match a character in the set [-0-9A-Z_a-z] atomically at least 1 and at most 32 times.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.PathTraversalPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>(\\.\\.[\\\\/]|[\\\\/]\\.\\.[\\\\/]|[\\\\/]\\.\\.$|^\\.\\.[\\\\/])</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ 1st capture group.<br/>
+                ○ Match with 3 alternative expressions, atomically.<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match the string "..".<br/>
+                        ○ Match a character in the set [/\\].<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match a character in the set [/\\].<br/>
+                        ○ Match the string "..".<br/>
+                        ○ Match with 2 alternative expressions, atomically.<br/>
+                            ○ Match a character in the set [/\\].<br/>
+                            ○ Match if at the end of the string or if before an ending newline.<br/>
+                    ○ Match a sequence of expressions.<br/>
+                        ○ Match if at the beginning of the string.<br/>
+                        ○ Match the string "..".<br/>
+                        ○ Match a character in the set [/\\].<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.CommandInjectionPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>[;&amp;|`$(){}[\\]&lt;&gt;\\\\]</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [$&amp;();&lt;&gt;[-]`{-}].<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.SqlInjectionPattern">
+            <remarks>
+            Pattern:<br/>
+            <code>('(''|[^'])*')|(;)|(--|#)|(\\/\\*|\\*\\/)|(\\b(ALTER|CREATE|DELETE|DROP|EXEC|INSERT|MERGE|SELECT|UPDATE|UNION)\\b)</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match with 5 alternative expressions, atomically.<br/>
+                ○ 1st capture group.<br/>
+                    ○ Match '\''.<br/>
+                    ○ Loop greedily any number of times.<br/>
+                        ○ 2nd capture group.<br/>
+                            ○ Match with 2 alternative expressions.<br/>
+                                ○ Match the string "''".<br/>
+                                ○ Match any character other than '\''.<br/>
+                    ○ Match '\''.<br/>
+                ○ 3rd capture group.<br/>
+                    ○ Match ';'.<br/>
+                ○ 4th capture group.<br/>
+                    ○ Match with 2 alternative expressions, atomically.<br/>
+                        ○ Match the string "--".<br/>
+                        ○ Match '#'.<br/>
+                ○ 5th capture group.<br/>
+                    ○ Match with 2 alternative expressions, atomically.<br/>
+                        ○ Match the string "/*".<br/>
+                        ○ Match the string "*/".<br/>
+                ○ 6th capture group.<br/>
+                    ○ Match if at a word boundary.<br/>
+                    ○ 7th capture group.<br/>
+                        ○ Match with 8 alternative expressions.<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Aa].<br/>
+                                ○ Match a character in the set [Ll].<br/>
+                                ○ Match a character in the set [Tt].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Cc].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Aa].<br/>
+                                ○ Match a character in the set [Tt].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Dd].<br/>
+                                ○ Match with 2 alternative expressions.<br/>
+                                    ○ Match a sequence of expressions.<br/>
+                                        ○ Match an empty string.<br/>
+                                        ○ Match a character in the set [Ll].<br/>
+                                        ○ Match a character in the set [Ee].<br/>
+                                        ○ Match a character in the set [Tt].<br/>
+                                        ○ Match a character in the set [Ee].<br/>
+                                    ○ Match a sequence of expressions.<br/>
+                                        ○ Match an empty string.<br/>
+                                        ○ Match a character in the set [Oo].<br/>
+                                        ○ Match a character in the set [Pp].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Xx].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Cc].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Ii].<br/>
+                                ○ Match a character in the set [Nn].<br/>
+                                ○ Match a character in the set [Ss].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                                ○ Match a character in the set [Tt].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Mm].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Rr].<br/>
+                                ○ Match a character in the set [Gg].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Ss].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Ll].<br/>
+                                ○ Match a character in the set [Ee].<br/>
+                                ○ Match a character in the set [Cc].<br/>
+                                ○ Match a character in the set [Tt].<br/>
+                            ○ Match a sequence of expressions.<br/>
+                                ○ Match a character in the set [Uu].<br/>
+                                ○ Match with 2 alternative expressions.<br/>
+                                    ○ Match a sequence of expressions.<br/>
+                                        ○ Match an empty string.<br/>
+                                        ○ Match a character in the set [Dd].<br/>
+                                        ○ Match a character in the set [Aa].<br/>
+                                        ○ Match a character in the set [Tt].<br/>
+                                        ○ Match a character in the set [Ee].<br/>
+                                    ○ Match a sequence of expressions.<br/>
+                                        ○ Match an empty string.<br/>
+                                        ○ Match a character in the set [Ii].<br/>
+                                        ○ Match a character in the set [Oo].<br/>
+                                        ○ Match a character in the set [Nn].<br/>
+                    ○ Match if at a word boundary.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.ValidateProfileName(System.String)">
+            <summary>
+            Validates a profile name for security and format requirements
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.ValidateAliasName(System.String)">
+            <summary>
+            Validates an alias name for security and format requirements
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.ValidateUserInput(System.String,System.String)">
+            <summary>
+            Validates and sanitizes user input for potential security threats
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.Core.Validation.InputValidator.SanitizeForLogging(System.String)">
+            <summary>
+            Sanitizes a string for safe logging (removes potentially sensitive information)
+            </summary>
+        </member>
+        <member name="T:ClaudeProfileManager.Core.Validation.ValidationResult">
+            <summary>
+            Represents the result of input validation
+            </summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ApiKeyPattern_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the ApiKeyPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.ApiKeyPattern_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ApiKeyPattern_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ApiKeyPattern_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ApiKeyPattern_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ApiKeyPattern_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ApiKeyPattern_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ApiKeyPattern_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ApiKeyPattern_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerTokenPattern_1">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the BearerTokenPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.BearerTokenPattern_1.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerTokenPattern_1.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerTokenPattern_1.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerTokenPattern_1.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.BearerTokenPattern_1.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerTokenPattern_1.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerTokenPattern_1.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.BearerTokenPattern_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the OAuthTokenPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.OAuthTokenPattern_2.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CredentialPattern_3">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the CredentialPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.CredentialPattern_3.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CredentialPattern_3.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CredentialPattern_3.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CredentialPattern_3.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CredentialPattern_3.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CredentialPattern_3.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CredentialPattern_3.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CredentialPattern_3.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UserPathPattern_4">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the UserPathPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.UserPathPattern_4.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_4.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UserPathPattern_4.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_4.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UserPathPattern_4.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_4.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_4.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UserPathPattern_4.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WindowsPathPattern_5">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the WindowsPathPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.WindowsPathPattern_5.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WindowsPathPattern_5.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WindowsPathPattern_5.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WindowsPathPattern_5.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WindowsPathPattern_5.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WindowsPathPattern_5.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WindowsPathPattern_5.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WindowsPathPattern_5.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UnixPathPattern_6">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the UnixPathPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.UnixPathPattern_6.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnixPathPattern_6.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UnixPathPattern_6.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnixPathPattern_6.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UnixPathPattern_6.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnixPathPattern_6.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnixPathPattern_6.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnixPathPattern_6.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the StackTraceFilePattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.StackTraceFilePattern_7.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ProfileNamePattern_8">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the ProfileNamePattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.ProfileNamePattern_8.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ProfileNamePattern_8.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ProfileNamePattern_8.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ProfileNamePattern_8.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ProfileNamePattern_8.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ProfileNamePattern_8.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ProfileNamePattern_8.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ProfileNamePattern_8.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.AliasNamePattern_9">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the AliasNamePattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.AliasNamePattern_9.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.AliasNamePattern_9.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.AliasNamePattern_9.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.AliasNamePattern_9.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.AliasNamePattern_9.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.AliasNamePattern_9.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.AliasNamePattern_9.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.AliasNamePattern_9.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PathTraversalPattern_10">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the PathTraversalPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.PathTraversalPattern_10.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PathTraversalPattern_10.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PathTraversalPattern_10.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PathTraversalPattern_10.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PathTraversalPattern_10.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PathTraversalPattern_10.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PathTraversalPattern_10.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PathTraversalPattern_10.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CommandInjectionPattern_11">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the CommandInjectionPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.CommandInjectionPattern_11.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CommandInjectionPattern_11.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CommandInjectionPattern_11.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CommandInjectionPattern_11.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CommandInjectionPattern_11.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CommandInjectionPattern_11.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CommandInjectionPattern_11.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the SqlInjectionPattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.SqlInjectionPattern_12.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.IsBoundary(System.ReadOnlySpan{System.Char},System.Int32)">
+            <summary>Determines whether the specified index is a boundary.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.IsWordChar(System.Char)">
+            <summary>Determines whether the character is part of the [\w] set.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPop(System.Int32[],System.Int32@,System.Int32@,System.Int32@)">
+            <summary>Pops 2 values from the backtracking stack.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32)">
+            <summary>Pushes 1 value onto the backtracking stack.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32)">
+            <summary>Pushes 2 values onto the backtracking stack.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32,System.Int32)">
+            <summary>Pushes 3 values onto the backtracking stack.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_40FF03FEFFFF87FEFFFF07">
+            <summary>Supports searching for characters in or not in ".0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_500300580000003801000038">
+            <summary>Supports searching for characters in or not in "$&amp;();&lt;&gt;[\\]`{|}".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_88A400083A2228003A222800">
+            <summary>Supports searching for characters in or not in "#'*-/;ACDEIMSUacdeimsu".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_FF53FEFFFF87FEFFFF07">
+            <summary>Supports searching for characters in or not in "0123456789&lt;&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_indexOfString_3E9E34DD14CA371F60530FA7EA36479E01D984CABB71197469AF300D73C6ABD3">
+            <summary>Supports searching for the string ":\\".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_indexOfString_91C786DD54DD216AAB3DA35528BD0E858206BF3FAF6D98BA1C44BBFC36A51F5D">
+            <summary>Supports searching for the string "c:\\users\\".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_indexOfString_E6D741957423F3DE16E33522DC7D810B680288C2231E8DB68641E47EC3B6257A">
+            <summary>Supports searching for the string "\"claudeaioauth\":".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_indexOfString_at_Ordinal">
+            <summary>Supports searching for the string "at".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_indexOfString_bearer_OrdinalIgnoreCase">
+            <summary>Supports searching for the string "bearer".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_nonAscii_0D7E5600013B3F0349C00277028B6DEA566BB9BAF991CCB7AC92DEC54C4544C1">
+            <summary>Supports searching for characters in or not in "-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyzK".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_nonAscii_D41BEF0BEAFBA32A45D2356E3F1579596F35B7C67CAA9CF7C4B3F2A5422DCA51">
+            <summary>Supports searching for characters in or not in "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyzK".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_nonAscii_D65574445CED49419DA9A1E8CD252ACD3FCD1A25D6A35CCC09628A81450EB56D">
+            <summary>Supports searching for characters in or not in "CKPSTckpstK".</summary>
+        </member>
+    </members>
+</doc>

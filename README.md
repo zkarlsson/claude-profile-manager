@@ -46,23 +46,17 @@ Originally designed for macOS, this Windows implementation provides the same pow
 
 ### Windows Installation
 
-#### Method 1: Windows Installer (Recommended)
-```cmd
-# Download and run installer
-.\install-claude-profile-manager.bat
-```
-
-#### Method 2: Chocolatey
+#### Method 1: Chocolatey (Recommended)
 ```powershell
 choco install claude-profile-manager
 ```
 
-#### Method 3: PowerShell Module
+#### Method 2: PowerShell Module
 ```powershell
 Install-Module ClaudeProfileManager
 ```
 
-#### Method 4: Portable
+#### Method 3: Portable
 Download `claude-profile-manager.exe` and run directly - no installation required.
 
 ### macOS Installation

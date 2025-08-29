@@ -1,63 +1,31 @@
 function Get-ClaudeProfile {
     <#
     .SYNOPSIS
-        Retrieves Claude Code CLI profiles with their status and metadata.
+        Lists all Claude profiles or gets a specific profile.
     
     .DESCRIPTION
-        The Get-ClaudeProfile cmdlet lists all saved Claude Code CLI profiles or retrieves
-        information about a specific profile. It shows authentication method, creation date,
-        last used date, current status, token health, and associated aliases.
+        The Get-ClaudeProfile cmdlet lists all saved Claude Code CLI profiles
+        or retrieves information about a specific profile. This is a PowerShell
+        wrapper around the claude-profile-manager CLI tool.
     
     .PARAMETER Name
-        The name of a specific profile to retrieve. If not specified, all profiles are returned.
-    
-    .PARAMETER IncludeAliases
-        Include alias information in the output. This shows which aliases point to each profile.
-    
-    .PARAMETER Current
-        Return only the currently active profile.
+        The name of a specific profile to retrieve. If not specified, lists all profiles.
     
     .OUTPUTS
-        ClaudeProfileManager.Profile[]
-        Returns an array of profile objects with the following properties:
-        - Name: Profile name
-        - AuthMethod: Authentication method (Console, Subscription, etc.)
-        - Created: When the profile was created
-        - LastUsed: When the profile was last used
-        - IsCurrent: Whether this is the currently active profile
-        - TokenHealth: Health status of the authentication token
-        - Aliases: Array of aliases for this profile
+        Profile information displayed in console.
     
     .EXAMPLE
         Get-ClaudeProfile
         
-        Lists all saved profiles with their status information.
+        Lists all saved profiles with their status.
     
     .EXAMPLE
         Get-ClaudeProfile -Name "work"
         
-        Retrieves information about the "work" profile specifically.
-    
-    .EXAMPLE
-        Get-ClaudeProfile -Current
-        
-        Returns only the currently active profile.
-    
-    .EXAMPLE
-        Get-ClaudeProfile | Where-Object { $_.AuthMethod -eq 'Subscription' }
-        
-        Gets all profiles that use OAuth subscription authentication.
-    
-    .EXAMPLE
-        Get-ClaudeProfile | Sort-Object LastUsed -Descending | Select-Object -First 5
-        
-        Shows the 5 most recently used profiles.
+        Gets information about the "work" profile specifically.
     
     .NOTES
-        - Returns properly typed PowerShell objects that work well with formatting and pipelines
-        - The TokenHealth property shows expiration information for subscription profiles
-        - IsCurrent indicates which profile is currently active in Claude Code CLI
-        - Created and LastUsed are DateTime objects for easy sorting and filtering
+        This is a thin wrapper around claude-profile-manager.exe CLI tool.
     
     .LINK
         Save-ClaudeProfile
@@ -65,123 +33,44 @@ function Get-ClaudeProfile {
         Remove-ClaudeProfile
     #>
     
-    [CmdletBinding(DefaultParameterSetName = 'All')]
-    [OutputType([PSCustomObject[]])]
+    [CmdletBinding()]
     param(
-        [Parameter(
-            Mandatory = $false,
-            Position = 0,
-            ParameterSetName = 'Specific',
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            HelpMessage = "The name of the profile to retrieve"
-        )]
-        [ValidateNotNullOrEmpty()]
-        [string]$Name,
-        
-        [Parameter(Mandatory = $false)]
-        [switch]$IncludeAliases,
-        
-        [Parameter(
-            Mandatory = $false,
-            ParameterSetName = 'Current'
-        )]
-        [switch]$Current
+        [Parameter(Position = 0)]
+        [string]$Name
     )
     
-    begin {
-        Write-Verbose "Starting Get-ClaudeProfile"
-        if ($Name) {
-            Write-Verbose "Retrieving specific profile: $Name"
-        }
-        elseif ($Current) {
-            Write-Verbose "Retrieving current profile only"
-        }
-        else {
-            Write-Verbose "Retrieving all profiles"
-        }
-    }
-    
-    process {
-        try {
-            # Build CLI arguments based on parameter set
-            $cliArgs = @('list')
-            
+    try {
+        # Get CLI path
+        $cliPath = Get-ClaudeProfileCLIPath
+        
+        # Build arguments - always use list command for simplicity
+        $args = @('list')
+        
+        # Execute CLI
+        Write-Verbose "Executing: $cliPath $($args -join ' ')"
+        $result = & $cliPath @args 2>&1
+        
+        if ($LASTEXITCODE -eq 0) {
             if ($Name) {
-                # Get specific profile (CLI doesn't have this directly, so we'll filter)
-                Write-Verbose "Getting specific profile '$Name'"
-            }
-            elseif ($Current) {
-                # Get current profile
-                $currentOutput = Invoke-ClaudeProfileCLI -Arguments @('current') -ThrowOnError
-                if ($currentOutput -and $currentOutput -ne "No current profile set.") {
-                    # Get the current profile name and then get its details
-                    $currentProfileName = $currentOutput.Trim()
-                    Write-Verbose "Current profile is: $currentProfileName"
-                    $Name = $currentProfileName
-                }
-                else {
-                    Write-Verbose "No current profile is set"
-                    return @()
-                }
-            }
-            
-            # Execute CLI command to get profiles
-            Write-Verbose "Executing CLI list command"
-            $rawOutput = Invoke-ClaudeProfileCLI -Arguments $cliArgs -ParseJsonOutput -ThrowOnError
-            
-            if (-not $rawOutput) {
-                Write-Verbose "No profiles found"
-                return @()
-            }
-            
-            # Convert CLI output to PowerShell objects
-            $profiles = ConvertTo-PowerShellObject -InputObject $rawOutput -ObjectType 'Profile'
-            
-            # Filter to specific profile if requested
-            if ($Name) {
-                $profiles = $profiles | Where-Object { $_.Name -eq $Name }
-                if (-not $profiles) {
+                # Filter output for specific profile if requested
+                $lines = $result -split "`n"
+                $filtered = $lines | Where-Object { $_ -match "^\s*➤?\s*$([regex]::Escape($Name))" }
+                if ($filtered) {
+                    # Show header and matching profile
+                    Write-Host $lines[0] # Header
+                    Write-Host $filtered
+                } else {
                     Write-Warning "Profile '$Name' not found"
-                    return @()
                 }
+            } else {
+                Write-Host $result
             }
-            
-            # Add alias information if requested
-            if ($IncludeAliases) {
-                Write-Verbose "Including alias information"
-                try {
-                    $aliasOutput = Invoke-ClaudeProfileCLI -Arguments @('aliases') -ParseJsonOutput -ThrowOnError:$false
-                    if ($aliasOutput) {
-                        $aliases = ConvertTo-PowerShellObject -InputObject $aliasOutput -ObjectType 'Alias'
-                        
-                        # Add aliases to each profile
-                        foreach ($profile in $profiles) {
-                            $profileAliases = $aliases | Where-Object { $_.ProfileName -eq $profile.Name } | Select-Object -ExpandProperty Alias
-                            $profile.Aliases = if ($profileAliases) { [string[]]$profileAliases } else { @() }
-                        }
-                    }
-                }
-                catch {
-                    Write-Verbose "Could not retrieve alias information: $($_.Exception.Message)"
-                }
-            }
-            
-            # Ensure consistent return type
-            if ($profiles -is [array] -and $profiles.Count -eq 1 -and $Name) {
-                return $profiles[0]
-            }
-            else {
-                return $profiles
-            }
-        }
-        catch {
-            $errorMessage = "Failed to retrieve Claude profiles: $($_.Exception.Message)"
-            Write-Error $errorMessage -Category InvalidOperation -ErrorAction Stop
+        } else {
+            throw "CLI command failed: $result"
         }
     }
-    
-    end {
-        Write-Verbose "Get-ClaudeProfile completed"
+    catch {
+        Write-Error "Failed to get Claude profile: $($_.Exception.Message)"
+        throw
     }
 }

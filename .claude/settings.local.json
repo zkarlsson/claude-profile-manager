@@ -4,7 +4,17 @@
       "Bash(dotnet build)",
       "Bash(dotnet test)",
       "Bash(mv:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(git fetch:*)",
+      "Read(C:\\Users\\zkarl/**)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(git add:*)",
+      "mcp__ollama-mcp__ollama_ask",
+      "Bash(rm:*)",
+      "Bash(pwsh:*)",
+      "Bash(./claude-profile-manager --help)",
+      "Bash(./claude-profile-manager list)"
     ],
     "deny": [],
     "ask": []

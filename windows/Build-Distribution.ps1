@@ -5,9 +5,8 @@
 
 .DESCRIPTION
     Creates production-ready builds with optimized paths and packaging for:
-    - Single-file executable
+    - Single-file executable  
     - Chocolatey package
-    - MSI installer preparation
     
 .PARAMETER Configuration
     Build configuration (Release, Debug). Default: Release
@@ -38,7 +37,7 @@ $ErrorActionPreference = "Stop"
 
 # Build paths - optimized for Windows distribution
 $ProjectRoot = Split-Path -Path $PSScriptRoot -Parent
-$WindowsProject = Join-Path $PSScriptRoot "ClaudeProfileManager.Windows"
+$CLIProject = Join-Path $PSScriptRoot "ClaudeProfileManager.CLI"
 $DistDir = Join-Path $PSScriptRoot "dist"
 $PackageDir = Join-Path $PSScriptRoot "packages"
 
@@ -51,8 +50,8 @@ if ($Clean) {
     Write-Host "🧹 Cleaning build outputs..." -ForegroundColor Yellow
     
     $CleanPaths = @(
-        (Join-Path $WindowsProject "bin"),
-        (Join-Path $WindowsProject "obj"),
+        (Join-Path $CLIProject "bin"),
+        (Join-Path $CLIProject "obj"),
         $DistDir,
         $PackageDir
     )
@@ -94,7 +93,7 @@ try {
     # Build with optimizations
     $PublishArgs = @(
         "publish"
-        $WindowsProject
+        $CLIProject
         "--configuration", $Configuration
         "--runtime", "win-x64"
         "--self-contained", "true"
@@ -141,10 +140,10 @@ try {
         throw "Version command failed: $VersionOutput"
     }
     
-    # Test health command
-    $HealthOutput = & $TestExe health 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "Health command failed: $HealthOutput"
+    # Test list command (basic functionality test)
+    $ListOutput = & $TestExe list 2>&1
+    if ($LASTEXITCODE -ne 0 -and $ListOutput -notlike "*No profiles found*") {
+        throw "List command failed: $ListOutput"
     }
     
     Write-Host "✅ Executable tests passed" -ForegroundColor Green
@@ -181,17 +180,8 @@ try {
         Copy-Item (Join-Path $ChocolateySourceDir "*") $ChocolateyDir -Recurse -Force -Exclude "tools"
     }
     
-    # Create MSI preparation directory
-    $MSIDir = Join-Path $PackageDir "msi"
-    if (Test-Path $MSIDir) {
-        Remove-Item $MSIDir -Recurse -Force
-    }
-    New-Item -ItemType Directory -Path $MSIDir -Force | Out-Null
-    Copy-Item (Join-Path $DistDir "claude-profile-manager.exe") $MSIDir -Force
-    
     Write-Host "✅ Package structure prepared" -ForegroundColor Green
     Write-Host "  Chocolatey: $ChocolateyDir" -ForegroundColor Gray
-    Write-Host "  MSI Prep: $MSIDir" -ForegroundColor Gray
     
 } catch {
     Write-Error "❌ Package preparation failed: $_"
@@ -205,18 +195,15 @@ Write-Host ""
 Write-Host "📁 Build Outputs:" -ForegroundColor Cyan
 Write-Host "  Optimized Executable: $(Join-Path $DistDir 'claude-profile-manager.exe')" -ForegroundColor White
 Write-Host "  Chocolatey Package: $(Join-Path $PackageDir 'chocolatey')" -ForegroundColor White
-Write-Host "  MSI Preparation: $(Join-Path $PackageDir 'msi')" -ForegroundColor White
 Write-Host ""
 Write-Host "📋 Next Steps:" -ForegroundColor Cyan
 Write-Host "  1. Build Chocolatey package: choco pack $(Join-Path $PackageDir 'chocolatey\claude-profile-manager.nuspec')" -ForegroundColor White
-Write-Host "  2. Create MSI installer from $(Join-Path $PackageDir 'msi')" -ForegroundColor White
-Write-Host "  3. Test installation packages" -ForegroundColor White
+Write-Host "  2. Test installation packages" -ForegroundColor White
 Write-Host ""
 
 # Return useful information
 return @{
     ExecutablePath = Join-Path $DistDir "claude-profile-manager.exe"
     ChocolateyPackage = Join-Path $PackageDir "chocolatey"
-    MSIPreparation = Join-Path $PackageDir "msi"
     Success = $true
 }

@@ -60,9 +60,7 @@ Export-ModuleMember -Function @(
     'Get-CurrentClaudeProfile',
     'Set-ClaudeProfileAlias',
     'Get-ClaudeProfileAlias',
-    'Remove-ClaudeProfileAlias',
-    'Test-ClaudeProfileHealth',
-    'Get-ClaudeProfileStatus'
+    'Remove-ClaudeProfileAlias'
 ) -Alias @(
     'Save-CP',
     'Get-CP',

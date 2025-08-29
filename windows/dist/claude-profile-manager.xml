@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>claude-profile-manager</name>
+    </assembly>
+    <members>
+        <member name="T:ClaudeProfileManager.CLI.GlobalExceptionHandler">
+            <summary>
+            Global exception handler for the CLI application
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.CLI.GlobalExceptionHandler.Initialize(Microsoft.Extensions.Logging.ILogger,System.Boolean)">
+            <summary>
+            Initializes the global exception handler
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.CLI.GlobalExceptionHandler.HandleException(System.Exception,System.String)">
+            <summary>
+            Handles and sanitizes an exception, returning a user-friendly message
+            </summary>
+        </member>
+        <member name="M:ClaudeProfileManager.CLI.GlobalExceptionHandler.ContainsSensitiveInformation(System.Exception)">
+            <summary>
+            Determines if an exception contains sensitive information
+            </summary>
+        </member>
+    </members>
+</doc>
