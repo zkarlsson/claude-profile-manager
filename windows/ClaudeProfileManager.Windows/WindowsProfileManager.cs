@@ -489,6 +489,49 @@ public class WindowsProfileManager : IProfileManager
         }
     }
 
+    public async Task<string> GetProfileStatusAsync(string profileName, AuthMethod authMethod)
+    {
+        try
+        {
+            // Check if credentials exist
+            var credentialKey = GetCredentialKey(profileName, authMethod);
+            var credentials = await _credentialStore.GetCredentialAsync(credentialKey);
+            
+            if (string.IsNullOrEmpty(credentials))
+            {
+                return "missing";
+            }
+            
+            // For console profiles, just check if API key exists
+            if (authMethod == AuthMethod.Console)
+            {
+                return "ready";
+            }
+            
+            // For subscription profiles, check token health
+            if (authMethod == AuthMethod.Subscription)
+            {
+                try
+                {
+                    var tokenHealth = await _authDetector.GetTokenHealthAsync(credentials);
+                    return tokenHealth ?? "valid";
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogDebug(ex, "Failed to get token health for profile {ProfileName}", profileName);
+                    return "unknown";
+                }
+            }
+            
+            return "ready";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Failed to get status for profile {ProfileName}", profileName);
+            return "unknown";
+        }
+    }
+
     private async Task AutoSaveCurrentCredentialsAsync()
     {
         try

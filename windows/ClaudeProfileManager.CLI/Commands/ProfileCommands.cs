@@ -127,20 +127,15 @@ public class ProfileCommands
                     return;
                 }
 
-                Console.WriteLine("Profiles:");
-                Console.WriteLine();
-
+                // Print table header
+                Console.WriteLine($"{"",3}{"PROFILE",-15} {"TYPE",-12} {"CREATED",-12} {"LAST USED",-12} {"STATUS",-20}");
+                
                 foreach (var profile in profiles.OrderBy(p => p.Name))
                 {
                     var isCurrent = profile.Name == currentProfile;
-                    var marker = isCurrent ? "* " : "  ";
+                    var indicator = isCurrent ? "➤" : " ";
                     
-                    Console.WriteLine($"{marker}{profile.Name}");
-                    Console.WriteLine($"    Authentication: {profile.AuthMethod}");
-                    Console.WriteLine($"    Created: {profile.Created:yyyy-MM-dd HH:mm:ss}");
-                    Console.WriteLine($"    Last Used: {profile.LastUsed:yyyy-MM-dd HH:mm:ss}");
-
-                    // Show aliases for this profile more efficiently
+                    // Get profile aliases for display
                     var profileAliases = new List<string>();
                     foreach (var kvp in aliases)
                     {
@@ -149,17 +144,20 @@ public class ProfileCommands
                             profileAliases.Add(kvp.Key);
                         }
                     }
+                    
+                    var displayName = profile.Name;
                     if (profileAliases.Count > 0)
                     {
-                        Console.WriteLine($"    Aliases: {string.Join(", ", profileAliases)}");
+                        displayName += $" ({string.Join(", ", profileAliases)})";
                     }
-
-                    Console.WriteLine();
-                }
-
-                if (!string.IsNullOrEmpty(currentProfile))
-                {
-                    Console.WriteLine($"Current profile: {currentProfile}");
+                    
+                    // Determine status based on auth method
+                    var status = await _profileManager.GetProfileStatusAsync(profile.Name, profile.AuthMethod);
+                    
+                    var createdDate = profile.Created.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                    var lastUsedDate = profile.LastUsed.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                    
+                    Console.WriteLine($"{indicator,2} {displayName,-15} {profile.AuthMethod,-12} {createdDate,-12} {lastUsedDate,-12} {status,-20}");
                 }
             }
             catch (Exception ex)
@@ -299,4 +297,5 @@ public class ProfileCommands
 
         rootCommand.AddCommand(deleteCommand);
     }
+
 }
